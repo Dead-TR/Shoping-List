@@ -10,7 +10,11 @@ export const List: FC<Props> = ({}) => {
   return (
     <PageLayout
       header={<Text type="big">{"Список Покупок".toUpperCase()}</Text>}
-      footer={<Text style={{ backgroundColor: "red" }}>FOOTER</Text>}>
+      footer={[
+        { icon: "pen", onPress: () => {} },
+        { icon: "trash", onPress: () => {} },
+        { icon: "add", onPress: () => {} },
+      ]}>
       {/* <Text
         style={{
           height: 1800,
