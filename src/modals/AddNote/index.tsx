@@ -7,6 +7,7 @@ import { ModalProps } from "../../config/type";
 import { useCategories } from "../../providers/Categories/hook";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
+import { Text } from "../../components/Text";
 
 export const AddNote: FC<ModalProps> = ({}) => {
   const { categories } = useCategories();
@@ -25,7 +26,7 @@ export const AddNote: FC<ModalProps> = ({}) => {
             return (
               <Fragment key={`${color}_${name}_${i}`}>
                 <Button style={{ ...css.button, backgroundColor: color }}>
-                  {name || " "}
+                  <Text>{name || " "}</Text>
                 </Button>
               </Fragment>
             );

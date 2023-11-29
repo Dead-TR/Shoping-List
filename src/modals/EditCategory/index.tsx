@@ -9,8 +9,9 @@ import { Text } from "../../components/Text";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 
-export const EditCategory: FC<ModalProps> = ({}) => {
+export const EditCategory: FC<ModalProps> = ({ onClose }) => {
   const { categories, updateCategories } = useCategories();
+
   return (
     <ModalLayout style={css.container}>
       <View style={css.header}>
@@ -22,7 +23,8 @@ export const EditCategory: FC<ModalProps> = ({}) => {
           .sort((a, b) => {
             return (a.order || 0) - (b.order || 0);
           })
-          .map(({ color, name }, i) => {
+          .map((value, i) => {
+            const { color, name = "" } = value;
             return (
               <Fragment key={`${color}_${name}_${i}`}>
                 <View style={{ ...css.category, backgroundColor: color }}>
@@ -30,6 +32,7 @@ export const EditCategory: FC<ModalProps> = ({}) => {
                     container={{ style: css.inputBox }}
                     style={css.input}
                     defaultValue={name}
+                    handleOk={(v) => (value.name = v)}
                   />
 
                   <Button style={css.move}></Button>
@@ -38,7 +41,19 @@ export const EditCategory: FC<ModalProps> = ({}) => {
             );
           })}
       </View>
-      <ButtonsMenu buttons={[{ icon: "close" }, { icon: "ok" }]} />
+      <ButtonsMenu
+        buttons={[
+          { icon: "close", onPress: () => onClose() },
+          {
+            icon: "ok",
+            onPress: () => {
+              debugger;
+              updateCategories([...categories]);
+              onClose();
+            },
+          },
+        ]}
+      />
     </ModalLayout>
   );
 };

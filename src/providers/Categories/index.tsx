@@ -8,20 +8,30 @@ interface Props {
   children?: React.ReactNode;
 }
 export const CategoriesProvider: FC<Props> = ({ children }) => {
-  const { setValue, value } = useStorage(categoriesStorageKey);
+  const { setValue, value, isLoaded } = useStorage(categoriesStorageKey);
+  console.log("🚀 ~ file: index.tsx:12 ~ value:", value);
 
   const categories = useMemo(() => {
     const list: CategoryType[] = [];
+    debugger;
+
+    const setDefault = () => {
+      if (!isLoaded) return;
+
+      list.push(...colors.map((color) => ({ color } as CategoryType)));
+      setValue(JSON.stringify(list));
+    };
+
     try {
       const parsedData = JSON.parse("" + value) as CategoryType[] | null;
 
       if (parsedData) list.push(...parsedData);
+      else setDefault();
     } catch {
-      list.push(...colors.map((color) => ({ color } as CategoryType)));
-      setValue(JSON.stringify(list));
+      setDefault();
     }
     return list;
-  }, [value]);
+  }, [value, isLoaded]);
 
   const updateCategories = (value: CategoryType[]) => {
     try {

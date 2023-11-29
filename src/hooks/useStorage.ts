@@ -9,10 +9,23 @@ const storage = new Storage({
   storageBackend: AsyncStorage,
 });
 
-const EVENT_LISTENER = "EVENT_LISTENER_";
+const EVENT_LISTENER = "eventListener-";
 
 export const useStorage = (key: string) => {
   const [data, setData] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const setValue = (newValue: string | null) => {
+    try {
+      setData(newValue);
+
+      if (!newValue) storage.remove({ key });
+      else storage.save({ key, data });
+      storageEmitter.emit(EVENT_LISTENER + key, newValue);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     const listener = (value: string) => {
@@ -21,7 +34,10 @@ export const useStorage = (key: string) => {
     storageEmitter.addListener(EVENT_LISTENER + key, listener);
 
     storage.load({ key }).then((result) => {
-      setData((result as string) || null);
+      console.log("🚀 ~ load ~ ", result);
+
+      setValue((result as string) || null);
+      setIsLoaded(true);
     });
 
     return () => {
@@ -29,20 +45,9 @@ export const useStorage = (key: string) => {
     };
   }, [key]);
 
-  const setValue = (newValue: string | null) => {
-    try {
-      setData(newValue);
-
-      if (!newValue) storage.remove({ key });
-      else storage.save({ key, data });
-      storageEmitter.emit(key, newValue);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   return {
     value: data,
     setValue,
+    isLoaded,
   };
 };
