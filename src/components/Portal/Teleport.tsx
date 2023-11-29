@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect } from "react";
+import React, { FC, useEffect } from "react";
 import { useTeleport } from "./useTeleport";
 import { gates } from "../../config";
 

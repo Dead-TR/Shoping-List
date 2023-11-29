@@ -5,10 +5,13 @@ import {
 } from "@react-navigation/native";
 
 import { PortalProvider } from "../components/Portal";
+import { ModalProvider } from "./Modal";
+import { CategoriesProvider } from "./Categories";
 
 interface Props {
   children?: React.ReactNode;
 }
+
 export const Providers: FC<Props> = ({ children }) => {
   return (
     <>
@@ -24,7 +27,11 @@ export const Providers: FC<Props> = ({ children }) => {
             text: "#ffffff",
           },
         }}>
-        <PortalProvider>{children}</PortalProvider>
+        <ModalProvider>
+          <CategoriesProvider>
+            <PortalProvider>{children}</PortalProvider>
+          </CategoriesProvider>
+        </ModalProvider>
       </NavigationContainer>
     </>
   );

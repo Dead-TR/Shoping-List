@@ -13,8 +13,6 @@ export const PortalGate = (props: {
   return (
     <PortalContext.Consumer>
       {(value) => {
-        console.log(value);
-
         return (
           <React.Fragment>
             {value.gates[gateName]}

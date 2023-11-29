@@ -1,1 +1,3 @@
-export const gates = ["header", "footer"] as const;
+export const gates = ["header", "footer", "modal"] as const;
+
+

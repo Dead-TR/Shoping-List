@@ -1,6 +1,7 @@
 import type { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import type { ParamListBase, RouteProp } from "@react-navigation/native";
-import { routes } from "./routes";
+import { modals, routes } from "./routes";
+import { gates } from "./gates";
 
 export type PageOptions =
   | NativeStackNavigationOptions
@@ -10,3 +11,10 @@ export type PageOptions =
     }) => NativeStackNavigationOptions);
 
 export type RoutesNames = keyof typeof routes;
+export type ModalNames = keyof typeof modals;
+
+export type Gates = (typeof gates)[number];
+
+export interface ModalProps {
+  onClose: () => void;
+}
