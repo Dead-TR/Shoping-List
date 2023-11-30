@@ -18,10 +18,11 @@ export const Input: FC<Props> = ({
   style,
   color = "black",
   container,
+  defaultValue,
   handleOk,
   ...props
 }) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(defaultValue);
 
   return (
     <View

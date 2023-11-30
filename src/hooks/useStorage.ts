@@ -19,11 +19,19 @@ export const useStorage = (key: string) => {
     try {
       setData(newValue);
 
-      if (!newValue) storage.remove({ key });
-      else storage.save({ key, data });
+      if (!newValue) {
+        if (isLoaded) {
+          storage.remove({ key });
+          console.log("remove");
+        }
+      } else {
+        console.log("save ", key, data);
+
+        storage.save({ key, data: newValue });
+      }
       storageEmitter.emit(EVENT_LISTENER + key, newValue);
     } catch (e) {
-      console.error(e);
+      console.error("setValue error", e);
     }
   };
 
@@ -33,12 +41,17 @@ export const useStorage = (key: string) => {
     };
     storageEmitter.addListener(EVENT_LISTENER + key, listener);
 
-    storage.load({ key }).then((result) => {
-      console.log("🚀 ~ load ~ ", result);
+    storage
+      .load({ key })
+      .then((result) => {
+        console.log("load ", result, data);
 
-      setValue((result as string) || null);
-      setIsLoaded(true);
-    });
+        setValue((result as string) || null);
+        setIsLoaded(true);
+      })
+      .catch(() => {
+        setIsLoaded(true);
+      });
 
     return () => {
       storageEmitter.removeListener(EVENT_LISTENER + key, listener);

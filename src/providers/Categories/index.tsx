@@ -9,14 +9,15 @@ interface Props {
 }
 export const CategoriesProvider: FC<Props> = ({ children }) => {
   const { setValue, value, isLoaded } = useStorage(categoriesStorageKey);
-  console.log("🚀 ~ file: index.tsx:12 ~ value:", value);
 
   const categories = useMemo(() => {
+    console.log("update categories");
+
     const list: CategoryType[] = [];
-    debugger;
 
     const setDefault = () => {
       if (!isLoaded) return;
+      console.log("setDefault categories");
 
       list.push(...colors.map((color) => ({ color } as CategoryType)));
       setValue(JSON.stringify(list));
