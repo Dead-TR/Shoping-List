@@ -1,8 +1,9 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useMemo } from "react";
+
+import { categoriesStorageKey, colors } from "./config";
+import { useStorage } from "../../hooks/useStorage";
 import { CategoriesContext } from "./context";
 import { CategoryType } from "./type";
-import { useStorage } from "../../hooks/useStorage";
-import { categoriesStorageKey, colors } from "./config";
 
 interface Props {
   children?: React.ReactNode;
@@ -11,14 +12,10 @@ export const CategoriesProvider: FC<Props> = ({ children }) => {
   const { setValue, value, isLoaded } = useStorage(categoriesStorageKey);
 
   const categories = useMemo(() => {
-    console.log("update categories");
-
     const list: CategoryType[] = [];
 
     const setDefault = () => {
       if (!isLoaded) return;
-      console.log("setDefault categories");
-
       list.push(...colors.map((color) => ({ color } as CategoryType)));
       setValue(JSON.stringify(list));
     };

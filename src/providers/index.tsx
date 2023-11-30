@@ -7,6 +7,7 @@ import {
 import { PortalProvider } from "../components/Portal";
 import { ModalProvider } from "./Modal";
 import { CategoriesProvider } from "./Categories";
+import { ShopListProvider } from "./ShopList";
 
 interface Props {
   children?: React.ReactNode;
@@ -29,7 +30,9 @@ export const Providers: FC<Props> = ({ children }) => {
         }}>
         <ModalProvider>
           <CategoriesProvider>
-            <PortalProvider>{children}</PortalProvider>
+            <ShopListProvider>
+              <PortalProvider>{children}</PortalProvider>
+            </ShopListProvider>
           </CategoriesProvider>
         </ModalProvider>
       </NavigationContainer>

@@ -22,11 +22,8 @@ export const useStorage = (key: string) => {
       if (!newValue) {
         if (isLoaded) {
           storage.remove({ key });
-          console.log("remove");
         }
       } else {
-        console.log("save ", key, data);
-
         storage.save({ key, data: newValue });
       }
       storageEmitter.emit(EVENT_LISTENER + key, newValue);
@@ -44,8 +41,6 @@ export const useStorage = (key: string) => {
     storage
       .load({ key })
       .then((result) => {
-        console.log("load ", result, data);
-
         setValue((result as string) || null);
         setIsLoaded(true);
       })

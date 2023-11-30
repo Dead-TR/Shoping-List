@@ -102,7 +102,9 @@ const css = StyleSheet.create({
     color: "white",
     fontSize: 15,
   },
-  input: {},
+  input: {
+    textAlign: "center",
+  },
   inputBox: {
     flex: 1,
   },

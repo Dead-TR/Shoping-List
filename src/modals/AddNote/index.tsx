@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from "react";
+import React, { FC, Fragment, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { ButtonsMenu } from "../../components/ButtonsMenu";
@@ -8,13 +8,25 @@ import { useCategories } from "../../providers/Categories/hook";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { Text } from "../../components/Text";
+import { useShopList } from "../../providers/ShopList/hook";
 
-export const AddNote: FC<ModalProps> = ({}) => {
+export const AddNote: FC<ModalProps> = ({ onClose }) => {
   const { categories } = useCategories();
+  const [currentCategory, setCurrentCategory] = useState(0);
+  const [value, setValue] = useState("");
+
+  const { addElement } = useShopList();
+
   return (
     <ModalLayout style={css.container}>
       <View style={css.header}>
-        <Input style={css.input} color="white" />
+        <Input
+          placeholder="Введіть текст"
+          placeholderTextColor={css.input.color}
+          style={css.input}
+          color="white"
+          handleOk={setValue}
+        />
       </View>
 
       <View style={css.buttons}>
@@ -25,14 +37,32 @@ export const AddNote: FC<ModalProps> = ({}) => {
           .map(({ color, name }, i) => {
             return (
               <Fragment key={`${color}_${name}_${i}`}>
-                <Button style={{ ...css.button, backgroundColor: color }}>
-                  <Text>{name || " "}</Text>
+                <Button
+                  style={{
+                    ...css.button,
+                    backgroundColor: color,
+                    ...(currentCategory === i ? css.selected : {}),
+                  }}
+                  onPress={() => setCurrentCategory(i)}>
+                  <Text style={css.buttonText}>{name || " "}</Text>
                 </Button>
               </Fragment>
             );
           })}
       </View>
-      <ButtonsMenu buttons={[{ icon: "close" }, { icon: "ok" }]} />
+      <ButtonsMenu
+        buttons={[
+          { icon: "close", onPress: onClose },
+          {
+            icon: "ok",
+            onPress: () => {
+              const selectedColor = categories[currentCategory].color;
+              addElement(selectedColor, value);
+              onClose();
+            },
+          },
+        ]}
+      />
     </ModalLayout>
   );
 };
@@ -59,11 +89,22 @@ const css = StyleSheet.create({
     width: "31%",
     color: "#000",
     borderRadius: 10,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "transparent",
+  },
+  buttonText: {
+    textAlign: "center",
+  },
+  selected: {
+    borderColor: "white",
   },
 
-  header: {},
   input: {
-    paddingHorizontal: 10,
     color: "white",
+    textAlign: "center",
+  },
+  header: {
+    marginHorizontal: 10,
   },
 });
