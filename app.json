@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "userInterfaceStyle": "dark",
+
+    "extra": {
+      "eas": {
+        "projectId": "4738a483-ffbb-477e-ab85-84addaadab90"
+      }
+    },
+    "android": {
+      "package": "com.deadtr.shoppinglist"
+    }
+  }
+}

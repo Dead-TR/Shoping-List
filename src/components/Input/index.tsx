@@ -57,7 +57,7 @@ const css = StyleSheet.create({
     borderWidth: 1,
   },
   input: {
-    fontFamily: `"Inter", sans-serif`,
+    // fontFamily: `"Inter", sans-serif`,
     fontSize: 14,
     fontWeight: "500",
     color: "currentColor",

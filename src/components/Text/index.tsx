@@ -21,7 +21,7 @@ export const Text: FC<Props> = ({ type = "normal", style, ...props }) => {
 
 const css = StyleSheet.create({
   text: {
-    fontFamily: `"Inter", sans-serif`,
+    // fontFamily: `"Inter", sans-serif`,
   },
   big: {
     color: "white",

@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import EventEmitter from "events";
 import AsyncStorage from "@react-native-community/async-storage";
 import Storage from "react-native-storage";
+import { FirebaseAsyncStorage } from "./storage";
 
 const storageEmitter = new EventEmitter();
 const storage = new Storage({
   defaultExpires: null,
-  storageBackend: AsyncStorage,
+  // storageBackend: AsyncStorage,
+  storageBackend: new FirebaseAsyncStorage(),
 });
 
 const EVENT_LISTENER = "eventListener-";
@@ -41,10 +43,13 @@ export const useStorage = (key: string) => {
     storage
       .load({ key })
       .then((result) => {
+        console.log("~ loaded ~", key, result);
+
         setValue((result as string) || null);
         setIsLoaded(true);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log("catched", key, error);
         setIsLoaded(true);
       });
 

@@ -44,7 +44,9 @@ export const AddNote: FC<ModalProps> = ({ onClose }) => {
                     ...(currentCategory === i ? css.selected : {}),
                   }}
                   onPress={() => setCurrentCategory(i)}>
-                  <Text style={css.buttonText}>{name || " "}</Text>
+                  <Text style={css.buttonText} numberOfLines={1}>
+                    {name || " "}
+                  </Text>
                 </Button>
               </Fragment>
             );

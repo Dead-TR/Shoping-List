@@ -19,8 +19,6 @@ export const List: FC<Props> = ({}) => {
   const { categories } = useCategories();
   const { complete, list } = useShopList();
 
-  console.log("~> ", list);
-
   const categoriesNames = useMemo(() => {
     return categories.reduce((acm, { color, name }) => {
       acm[color] = name || "";
