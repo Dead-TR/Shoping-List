@@ -11,6 +11,8 @@ export const ModalProvider: FC<Props> = ({ children }) => {
     null,
   );
 
+  const [state, setState] = useState<string | null>(null);
+
   return (
     <ModalContext.Provider
       value={{
@@ -20,9 +22,15 @@ export const ModalProvider: FC<Props> = ({ children }) => {
         },
 
         close: () => {
+          setState(null);
           setSelectedModalName(null);
         },
         isOpen: !!selectedModalName,
+
+        state: {
+          value: state,
+          setState,
+        },
       }}>
       {children}
     </ModalContext.Provider>

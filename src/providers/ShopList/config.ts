@@ -1,1 +1,1 @@
-export const shopListKey = "shopListKey";
+export const shopListKey = "SHOP-LIST-KEY";

@@ -6,7 +6,7 @@ import { PortalGate } from "../../components/Portal/Gate";
 import { Modal } from "../../components/Modal";
 
 export const ModalContainer: FC = ({}) => {
-  const { modalName, isOpen, close } = useModal();
+  const { modalName, isOpen, close, state } = useModal();
 
   const Component = useCallback(
     (props: ModalProps) => {
@@ -26,7 +26,7 @@ export const ModalContainer: FC = ({}) => {
   return (
     <>
       <PortalGate gateName="modal" />
-      <Component onClose={close} />
+      <Component onClose={close} state={state} />
     </>
   );
 };

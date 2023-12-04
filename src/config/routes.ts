@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import { PageOptions } from "./type";
 import { List, _404 } from "../pages";
-import { AddNote, EditCategory } from "../modals";
+import { AddNote, EditCategories } from "../modals";
 
 const setPage = (
   Component: (() => React.JSX.Element) | FC<any>,
@@ -19,5 +19,5 @@ export const routes = {
 
 export const modals = {
   addNote: AddNote,
-  editCategory: EditCategory,
+  editCategory: EditCategories,
 } as const;

@@ -9,7 +9,7 @@ import { Text } from "../../components/Text";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 
-export const EditCategory: FC<ModalProps> = ({ onClose }) => {
+export const EditCategories: FC<ModalProps> = ({ onClose }) => {
   const { categories, updateCategories } = useCategories();
 
   return (

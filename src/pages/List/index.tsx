@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from "react";
+import { FC, Fragment, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { PageLayout } from "../../components/PageLayout";
 import { Text } from "../../components/Text";
@@ -35,13 +35,15 @@ export const List: FC<Props> = ({}) => {
         { icon: "add", onPress: () => setModal("addNote") },
       ]}>
       <View style={css.container}>
-        {Object.entries(list).map(([color, list]) => {
+        {Object.entries(list).map(([color, list], i) => {
           return (
-            <ShopItemCollapse
-              color={color}
-              categoryName={categoriesNames[color]}
-              list={list}
-            />
+            <Fragment key={color + "_" + i}>
+              <ShopItemCollapse
+                color={color}
+                categoryName={categoriesNames[color]}
+                list={list}
+              />
+            </Fragment>
           );
         })}
       </View>

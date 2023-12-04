@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react";
 import EventEmitter from "events";
-import AsyncStorage from "@react-native-community/async-storage";
-import Storage from "react-native-storage";
-import { FirebaseAsyncStorage } from "./storage";
+import { Storage } from "./storage";
+
+const loading: {
+  isLoad: boolean;
+  onLoad: (() => void)[];
+} = {
+  isLoad: false,
+  onLoad: [],
+};
 
 const storageEmitter = new EventEmitter();
-const storage = new Storage({
-  defaultExpires: null,
-  // storageBackend: AsyncStorage,
-  storageBackend: new FirebaseAsyncStorage(),
+const storage = new Storage(() => {
+  loading.isLoad = true;
+  loading.onLoad.forEach((f) => f());
 });
 
-const EVENT_LISTENER = "eventListener-";
+const EVENT_LISTENER = "EVENT-LISTENER-";
 
 export const useStorage = (key: string) => {
   const [data, setData] = useState<string | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(loading.isLoad);
 
   const setValue = (newValue: string | null) => {
     try {
@@ -23,10 +28,10 @@ export const useStorage = (key: string) => {
 
       if (!newValue) {
         if (isLoaded) {
-          storage.remove({ key });
+          storage.remove(key);
         }
       } else {
-        storage.save({ key, data: newValue });
+        storage.save(key, newValue);
       }
       storageEmitter.emit(EVENT_LISTENER + key, newValue);
     } catch (e) {
@@ -35,28 +40,30 @@ export const useStorage = (key: string) => {
   };
 
   useEffect(() => {
-    const listener = (value: string) => {
-      setData(value);
-    };
+    const listener = (value: string) => setData(value);
     storageEmitter.addListener(EVENT_LISTENER + key, listener);
 
-    storage
-      .load({ key })
-      .then((result) => {
-        console.log("~ loaded ~", key, result);
+    if (!loading.isLoad) {
+      const onLoad = async () => {
+        const result = await storage.get(key);
+        setData(result);
 
-        setValue((result as string) || null);
         setIsLoaded(true);
-      })
-      .catch((error) => {
-        console.log("catched", key, error);
-        setIsLoaded(true);
-      });
+      };
+
+      loading.onLoad.push(onLoad);
+    }
 
     return () => {
       storageEmitter.removeListener(EVENT_LISTENER + key, listener);
     };
   }, [key]);
+
+  useEffect(() => {
+    if (isLoaded && !data) {
+      storage.get(key).then((value) => setData(value));
+    }
+  }, [isLoaded]);
 
   return {
     value: data,

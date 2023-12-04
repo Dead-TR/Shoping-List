@@ -1,71 +1,77 @@
+import LocalStorage from "react-native-storage";
 import AsyncStorage from "@react-native-community/async-storage";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore/lite";
-import { dataBase } from "./fireBase";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
+import { dataBase } from "../fireBase";
 
-interface Result {
-  rawData: string;
-}
+export class Storage {
+  constructor(onLoad: () => void) {
+    this.getDataFromServer(onLoad);
+  }
 
-export class FirebaseAsyncStorage {
-  setItem = async (...params: Parameters<(typeof AsyncStorage)["setItem"]>) => {
-    const [key, value, callBack] = params;
-    console.log("key, value ~> ", key, value);
+  private store: Record<string, string> = {};
 
-    try {
-      // list -- collection
-      // key -- document
-      const docs = doc(dataBase, "list", key);
-      const valueData = JSON.parse(value) as any;
-      const result = await setDoc(docs, valueData);
-    } catch {
-      return AsyncStorage.setItem(key, value, callBack);
-    }
-  };
-  getItem = async (...params: Parameters<(typeof AsyncStorage)["getItem"]>) => {
-    const [key, callBack] = params;
+  private localStorage = new LocalStorage({
+    defaultExpires: null,
+    storageBackend: AsyncStorage,
+  });
 
+  private async getDataFromServer(onLoad: () => void) {
     try {
       const currentCollection = collection(dataBase, "list");
       const docs = await getDocs(currentCollection);
-      const data = docs.docs
-        .map((doc) => {
-          if (doc.id === key) {
-            const data = doc.data();
-            return data?.rawData;
-          }
+      const data = docs.docs.reduce((acm, doc) => {
+        const data = doc.data();
+        acm[doc.id] = data?.rawData || null;
 
-          return null;
-        })
-        .filter((v) => !!v)[0]
-      console.log("~", key, data);
+        return acm;
+      }, {} as typeof this.store);
+      this.store = data;
+    } catch (e) {
+      console.error("getDataFromServer error", e);
+    }
 
-      if (!data || !data.length) {
-        callBack && callBack(null, null);
-        return JSON.stringify({
-          // rawData: null,
-        });
-      }
+    onLoad();
+  }
 
-      const result = data
-
-      callBack && callBack(null, result);
-
-      debugger
-      return result;
-    } catch {
-      const result = await AsyncStorage.getItem(key, callBack);
-      // result === "{rawData: string}"
-      return result;
+  remove = async (key: string) => {
+    try {
+      await this.localStorage.remove({ key });
+      const currentCollection = doc(dataBase, "list", key);
+      await deleteDoc(currentCollection);
+    } catch (e) {
+      console.error("remove error", e);
     }
   };
-  removeItem = async (
-    params: Parameters<(typeof AsyncStorage)["removeItem"]>,
-  ) => {
-    const [key, callBack] = params;
-    return AsyncStorage.removeItem(key, callBack);
+  save = async (key: string, value: string) => {
+    try {
+      this.store[key] = value;
+      this.localStorage.save({ key, data: value });
+
+      // list -- collection
+      // key -- document
+      const docs = doc(dataBase, "list", key);
+
+      await setDoc(docs, { rawData: value });
+    } catch (e) {
+      console.error("save error ", e);
+    }
   };
-  clear = async (params: Parameters<(typeof AsyncStorage)["clear"]>) => {
-    const [callback] = params;
-    return AsyncStorage.clear(callback);
+  get = async (key: string): Promise<string | null> => {
+    try {
+      if (this.store[key]) return this.store[key];
+      const result = await this.localStorage.load({ key });
+      if (result) return result as string;
+      return null;
+    } catch (e) {
+      console.error("get error", e);
+
+      return null;
+    }
   };
 }

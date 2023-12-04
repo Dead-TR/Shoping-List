@@ -9,6 +9,7 @@ import { Text } from "../../../components/Text";
 import { Button } from "../../../components/Button";
 import { createTimeouts } from "../../../utils";
 import { COLLAPSE_DEFAULT_DURATION } from "../../../components/Collapse/config";
+import { useModal } from "../../../providers/Modal/hook";
 
 interface Props {
   categoryName: string;
@@ -19,6 +20,8 @@ interface Props {
 const { clearTimeouts, pushTimeout } = createTimeouts();
 
 export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
+  const { state, setModal } = useModal();
+
   const [isOpen, setIsOpen] = useState(false);
   const prevValue = useRef(isOpen);
   const [isBorder, setIsBorder] = useState(false);
@@ -65,10 +68,31 @@ export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
               <Button
                 style={{
                   maxWidth: "100%",
+                }}
+                onLongPress={() => {
+                  state.setState({
+                    type: "edit",
+                    element: {
+                      id,
+                      color,
+                      text,
+                    },
+                  });
+                  setModal("addNote");
                 }}>
                 <Text
                   numberOfLines={1}
-                  style={{ ...css.text, backgroundColor: color }}>
+                  style={{
+                    ...css.text,
+                    backgroundColor: color,
+
+                    ...(isComplete
+                      ? {
+                          textDecorationLine: "line-through",
+                          textDecorationStyle: "solid",
+                        }
+                      : {}),
+                  }}>
                   {text}
                 </Text>
               </Button>

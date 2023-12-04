@@ -2,6 +2,7 @@ import type { NativeStackNavigationOptions } from "@react-navigation/native-stac
 import type { ParamListBase, RouteProp } from "@react-navigation/native";
 import { modals, routes } from "./routes";
 import { gates } from "./gates";
+import { ModalContextType } from "../providers/Modal/type";
 
 export type PageOptions =
   | NativeStackNavigationOptions
@@ -17,4 +18,5 @@ export type Gates = (typeof gates)[number];
 
 export interface ModalProps {
   onClose: () => void;
+  state: ModalContextType["state"];
 }
