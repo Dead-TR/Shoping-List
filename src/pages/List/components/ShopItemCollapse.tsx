@@ -11,6 +11,8 @@ import { createTimeouts } from "../../../utils";
 import { COLLAPSE_DEFAULT_DURATION } from "../../../components/Collapse/config";
 import { useModal } from "../../../providers/Modal/hook";
 import { useShopList } from "../../../providers/ShopList/hook";
+import { Modal } from "../../../components/Modal";
+import { ButtonsMenu } from "../../../components/ButtonsMenu";
 
 interface Props {
   categoryName: string;
@@ -22,9 +24,11 @@ const { clearTimeouts, pushTimeout } = createTimeouts();
 
 export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
   const { state, setModal } = useModal();
-  const { complete } = useShopList();
+  const { complete, updateList } = useShopList();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isModal, setIsModal] = useState(false);
+
   const prevValue = useRef(isOpen);
   const [isBorder, setIsBorder] = useState(false);
 
@@ -46,78 +50,127 @@ export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
     };
   }, [isOpen]);
 
+  const onOk = () => {
+    const isComplete = !list.find(({ isComplete }) => !isComplete);
+
+    if (isComplete) {
+      list.forEach((e) => (e.isComplete = false));
+    } else {
+      list.forEach((e) => (e.isComplete = true));
+    }
+
+    updateList();
+  };
+
+  const rm = () => {
+    list.length = 0;
+    updateList();
+  };
+
   return (
-    <Collapse
-      isOpen={isOpen}
-      onOpen={(is) => setIsOpen(is)}
-      header={
-        <View style={{ ...css.header, ...(!isBorder ? css.closed : {}) }}>
-          <View style={{ ...css.headerElement, ...css.categoryName }}>
-            <Icon
-              style={{
-                //@ts-ignore
-                color,
-                ...css.headerIcon,
-              }}
-              icon="arrow"
-            />
-            <Text numberOfLines={1}>{categoryName}</Text>
-          </View>
-
-          <View style={css.headerElement}>
-            <Icon icon="ok" style={css.headerIcon} />
-            <Icon icon="trash" style={css.headerIcon} />
-          </View>
-        </View>
-      }>
-      <View style={{ ...css.content, ...css.closed }}>
-        <View style={css.container}>
-          {list.map(({ id, isComplete, text }) => (
-            <Fragment key={"" + id + text + categoryName}>
-              <Button
+    <>
+      <Collapse
+        isOpen={isOpen}
+        onOpen={(is) => setIsOpen(is)}
+        header={
+          <View style={{ ...css.header, ...(!isBorder ? css.closed : {}) }}>
+            <View style={{ ...css.headerElement, ...css.categoryName }}>
+              <Icon
                 style={{
-                  maxWidth: "100%",
-                  opacity: isComplete ? 0.5 : 1,
+                  //@ts-ignore
+                  color,
+                  ...css.headerIcon,
                 }}
-                onPress={() => complete(id)}
-                onLongPress={() => {
-                  state.setState({
-                    type: "edit",
-                    element: {
-                      id,
-                      color,
-                      text,
-                    },
-                  });
-                  setModal("addNote");
-                }}>
-                <Text
-                  numberOfLines={1}
-                  style={{
-                    ...css.text,
-                    backgroundColor: color,
+                icon="arrow"
+              />
+              <Text numberOfLines={1}>{categoryName}</Text>
+            </View>
 
-                    ...(isComplete
-                      ? {
-                          textDecorationLine: "line-through",
-                          textDecorationStyle: "solid",
-                        }
-                      : {}),
-                  }}>
-                  {text}
-                </Text>
+            <View style={css.headerElement}>
+              <Button onPress={onOk}>
+                <Icon icon="ok" style={css.headerIcon} />
               </Button>
-            </Fragment>
-          ))}
+              <Button onPress={() => setIsModal(true)}>
+                <Icon icon="trash" style={css.headerIcon} />
+              </Button>
+            </View>
+          </View>
+        }>
+        <View style={{ ...css.content, ...css.closed }}>
+          <View style={css.container}>
+            {list.map(({ id, isComplete, text }) => (
+              <Fragment key={"" + id + text + categoryName}>
+                <Button
+                  style={{
+                    maxWidth: "100%",
+                    opacity: isComplete ? 0.5 : 1,
+                  }}
+                  onPress={() => complete(id)}
+                  onLongPress={() => {
+                    state.setState({
+                      type: "edit",
+                      element: {
+                        id,
+                        color,
+                        text,
+                      },
+                    });
+                    setModal("addNote");
+                  }}>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      ...css.text,
+                      backgroundColor: color,
+
+                      ...(isComplete
+                        ? {
+                            textDecorationLine: "line-through",
+                            textDecorationStyle: "solid",
+                          }
+                        : {}),
+                    }}>
+                    {text}
+                  </Text>
+                </Button>
+              </Fragment>
+            ))}
+          </View>
         </View>
-      </View>
-    </Collapse>
+      </Collapse>
+
+      <Modal isOpen={isModal} onClose={() => setIsModal(false)}>
+        <View style={css.modal}>
+          <Text style={css.modalText}>{`Ви певні?`.toUpperCase()}</Text>
+
+          <ButtonsMenu
+            buttons={[
+              { icon: "close", onPress: () => setIsModal(false) },
+              { icon: "ok", onPress: rm },
+            ]}
+          />
+        </View>
+      </Modal>
+    </>
   );
 };
 
 const radius = 10;
 
 const css = StyleSheet.create({
+  modal: {
+    backgroundColor: "#1E1E1E",
+    padding: 10,
+    borderRadius: 10,
+    minWidth: 300,
+  },
+  modalText: {
+    textAlign: "center",
+    color: "white",
+    padding: 5,
+    marginBottom: 20,
+    fontWeight: "bold",
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",

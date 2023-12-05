@@ -111,11 +111,12 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
     <ShopListContext.Provider
       value={{
         list,
-        addElement,
         complete,
+        addElement,
         editElement,
         removeElement,
-        clear
+        updateList,
+        clear,
       }}>
       {children}
     </ShopListContext.Provider>
