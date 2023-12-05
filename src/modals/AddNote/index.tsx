@@ -83,7 +83,7 @@ export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
               const { id } = element;
               editElement(id, values.current.value, selectedColor);
             } else {
-              addElement(selectedColor, value);
+              addElement(selectedColor, values.current.value);
             }
 
             close();

@@ -52,15 +52,22 @@ export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
       onOpen={(is) => setIsOpen(is)}
       header={
         <View style={{ ...css.header, ...(!isBorder ? css.closed : {}) }}>
-          <Icon
-            style={{
-              //@ts-ignore
-              color,
-            }}
-            icon="arrow"
-          />
+          <View style={{ ...css.headerElement, ...css.categoryName }}>
+            <Icon
+              style={{
+                //@ts-ignore
+                color,
+                ...css.headerIcon,
+              }}
+              icon="arrow"
+            />
+            <Text numberOfLines={1}>{categoryName}</Text>
+          </View>
 
-          <Text numberOfLines={1}>{categoryName}</Text>
+          <View style={css.headerElement}>
+            <Icon icon="ok" style={css.headerIcon} />
+            <Icon icon="trash" style={css.headerIcon} />
+          </View>
         </View>
       }>
       <View style={{ ...css.content, ...css.closed }}>
@@ -70,7 +77,7 @@ export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
               <Button
                 style={{
                   maxWidth: "100%",
-                  opacity: isComplete ? 0.5 : 1
+                  opacity: isComplete ? 0.5 : 1,
                 }}
                 onPress={() => complete(id)}
                 onLongPress={() => {
@@ -114,6 +121,7 @@ const css = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     gap: 10,
 
     padding: 10,
@@ -121,9 +129,21 @@ const css = StyleSheet.create({
     borderTopLeftRadius: radius,
     borderTopRightRadius: radius,
   },
+  headerIcon: {
+    minWidth: 20,
+    minHeight: 20,
+  },
   closed: {
     borderBottomLeftRadius: radius,
     borderBottomRightRadius: radius,
+  },
+  headerElement: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  categoryName: {
+    maxWidth: "80%",
   },
 
   content: {

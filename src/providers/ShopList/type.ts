@@ -13,4 +13,5 @@ export interface ShopListContextType {
 
   removeElement: (id: number) => void;
   editElement: (id: number, text: string, color: ColorType) => void;
+  clear: (color: string) => void
 }

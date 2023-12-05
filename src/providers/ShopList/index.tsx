@@ -99,6 +99,14 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
     updateList();
   };
 
+  const clear = (color: string) => {
+    if (list[color]) {
+      list[color].length = 0;
+    }
+
+    updateList();
+  };
+
   return (
     <ShopListContext.Provider
       value={{
@@ -107,6 +115,7 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
         complete,
         editElement,
         removeElement,
+        clear
       }}>
       {children}
     </ShopListContext.Provider>
