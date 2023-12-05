@@ -78,9 +78,23 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
     updateList();
   };
 
-  const complete = (color: ColorType, id: number) => {
-    const currentElement = list[color].find((e) => e.id === id);
-    if (currentElement) currentElement.isComplete = !currentElement.isComplete;
+  const complete = (id: number) => {
+    let currentElement: ShopElement;
+
+    for (const color in list) {
+      const current = list[color].find((e) => e.id === id);
+
+      if (current) {
+        currentElement = current;
+        break;
+      }
+    }
+
+    if (currentElement) {
+      if (currentElement.isComplete === undefined)
+        currentElement.isComplete = false;
+      currentElement.isComplete = !currentElement.isComplete;
+    }
 
     updateList();
   };

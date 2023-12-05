@@ -17,7 +17,7 @@ interface Props {
 export const List: FC<Props> = ({}) => {
   const { setModal } = useModal();
   const { categories } = useCategories();
-  const { complete, list } = useShopList();
+  const { list } = useShopList();
 
   const categoriesNames = useMemo(() => {
     return categories.reduce((acm, { color, name }) => {

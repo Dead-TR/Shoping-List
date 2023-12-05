@@ -10,6 +10,7 @@ import { Button } from "../../../components/Button";
 import { createTimeouts } from "../../../utils";
 import { COLLAPSE_DEFAULT_DURATION } from "../../../components/Collapse/config";
 import { useModal } from "../../../providers/Modal/hook";
+import { useShopList } from "../../../providers/ShopList/hook";
 
 interface Props {
   categoryName: string;
@@ -21,6 +22,7 @@ const { clearTimeouts, pushTimeout } = createTimeouts();
 
 export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
   const { state, setModal } = useModal();
+  const { complete } = useShopList();
 
   const [isOpen, setIsOpen] = useState(false);
   const prevValue = useRef(isOpen);
@@ -68,7 +70,9 @@ export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
               <Button
                 style={{
                   maxWidth: "100%",
+                  opacity: isComplete ? 0.5 : 1
                 }}
+                onPress={() => complete(id)}
                 onLongPress={() => {
                   state.setState({
                     type: "edit",
