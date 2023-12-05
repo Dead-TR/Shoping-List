@@ -1,7 +1,14 @@
-import React, { FC, Fragment, useEffect, useState } from "react";
+import React, {
+  FC,
+  Fragment,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { StyleSheet, View } from "react-native";
 
-import { ButtonsMenu } from "../../components/ButtonsMenu";
+import { ButtonsMenu, ButtonsMenuProps } from "../../components/ButtonsMenu";
 import { ModalLayout } from "../../components/ModalLayout";
 import { ModalProps } from "../../config/type";
 import { useCategories } from "../../providers/Categories/hook";
@@ -10,15 +17,21 @@ import { Input } from "../../components/Input";
 import { Text } from "../../components/Text";
 import { useShopList } from "../../providers/ShopList/hook";
 import { CategoryType } from "../../providers/Categories/type";
+import { arraySwap } from "../../utils";
 
 export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
-  console.log("🚀 ~ file: index.tsx:14 ~ state:", state);
   const { categories } = useCategories();
-  const [currentCategory, setCurrentCategory] = useState(0);
+  const [currentCategory, setCurrentCategory] = useState(-1);
   const [value, setValue] = useState("");
   const [editMode, setEditMode] = useState(false);
 
-  const { addElement } = useShopList();
+  const values = useRef({
+    value,
+    currentCategory,
+    categories,
+  });
+
+  const { addElement, editElement, removeElement } = useShopList();
 
   const sortedCategories = sortCategories(categories);
 
@@ -37,9 +50,70 @@ export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
     }
   }, [state?.value]);
 
+  useEffect(() => {
+    values.current.value = value;
+    values.current.categories = categories;
+    values.current.currentCategory = currentCategory;
+  }, [value, currentCategory, categories]);
+
   const close = () => {
     requestAnimationFrame(() => onClose());
   };
+
+  const buttons = useMemo(() => {
+    const buttons: ButtonsMenuProps["buttons"] = [
+      { icon: "close", onPress: close },
+      {
+        icon: "ok",
+        onPress: () => {
+          try {
+            debugger;
+
+            if (
+              values.current.currentCategory < 0 ||
+              !values.current.value ||
+              !values.current.categories.length
+            )
+              return;
+            const selectedColor =
+              values.current.categories[values.current.currentCategory].color;
+
+            if (editMode) {
+              const { element } = state.value;
+              const { id } = element;
+              editElement(id, values.current.value, selectedColor);
+            } else {
+              addElement(selectedColor, value);
+            }
+
+            close();
+          } catch (e) {
+            console.error(e);
+          }
+        },
+      },
+    ];
+
+    if (editMode) {
+      buttons.push({
+        icon: "trash",
+        onPress: () => {
+          try {
+            const { element } = state.value;
+            const { id } = element;
+            removeElement(id);
+            close();
+          } catch (e) {
+            console.error(e);
+          }
+        },
+      });
+
+      arraySwap(buttons, 1, 2);
+    }
+
+    return buttons;
+  }, [editMode]);
 
   return (
     <ModalLayout style={css.container}>
@@ -56,7 +130,7 @@ export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
       </View>
 
       <View style={css.buttons}>
-        {sortedCategories.map(({ color, name }, i) => {
+        {sortedCategories.map(({ color, name,  }, i) => {
           return (
             <Fragment key={`${color}_${name}_${i}`}>
               <Button
@@ -74,19 +148,7 @@ export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
           );
         })}
       </View>
-      <ButtonsMenu
-        buttons={[
-          { icon: "close", onPress: close },
-          {
-            icon: "ok",
-            onPress: () => {
-              const selectedColor = categories[currentCategory].color;
-              addElement(selectedColor, value);
-              close();
-            },
-          },
-        ]}
-      />
+      <ButtonsMenu buttons={buttons} />
     </ModalLayout>
   );
 };

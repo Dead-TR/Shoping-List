@@ -3,7 +3,7 @@ import React, { FC, useMemo } from "react";
 import { useStorage } from "../../hooks/useStorage";
 import { ColorType } from "../Categories/type";
 import { ShopListContext } from "./context";
-import { ShopListContextType } from "./type";
+import { ShopElement, ShopListContextType } from "./type";
 import { shopListKey } from "./config";
 
 interface Props {
@@ -46,6 +46,38 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
     updateList();
   };
 
+  const removeElement = (id: number) => {
+    for (const color in list) {
+      list[color] = list[color].filter((e) => e.id !== id);
+    }
+
+    updateList();
+  };
+
+  const editElement = (id: number, text: string, color: ColorType) => {
+    let currentElement: ShopElement;
+
+    for (const color in list) {
+      const current = list[color].find((e) => e.id === id);
+
+      if (current) {
+        currentElement = current;
+        list[color] = list[color].filter((e) => e.id !== id);
+        break;
+      }
+    }
+
+    if (currentElement) {
+      currentElement.text = text;
+
+      if (!list[color]) list[color] = [];
+
+      list[color].push(currentElement);
+    }
+
+    updateList();
+  };
+
   const complete = (color: ColorType, id: number) => {
     const currentElement = list[color].find((e) => e.id === id);
     if (currentElement) currentElement.isComplete = !currentElement.isComplete;
@@ -59,6 +91,8 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
         list,
         addElement,
         complete,
+        editElement,
+        removeElement,
       }}>
       {children}
     </ShopListContext.Provider>

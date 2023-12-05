@@ -36,6 +36,7 @@ export const List: FC<Props> = ({}) => {
       ]}>
       <View style={css.container}>
         {Object.entries(list).map(([color, list], i) => {
+          if (!list.length) return null;
           return (
             <Fragment key={color + "_" + i}>
               <ShopItemCollapse
