@@ -33,6 +33,7 @@ export const EditCategories: FC<ModalProps> = ({ onClose }) => {
                     style={css.input}
                     defaultValue={name}
                     handleOk={(v) => (value.name = v)}
+                    onChangeText={(v) => (value.name = v)}
                   />
 
                   <Button style={css.move}></Button>
@@ -47,7 +48,6 @@ export const EditCategories: FC<ModalProps> = ({ onClose }) => {
           {
             icon: "ok",
             onPress: () => {
-              debugger;
               updateCategories([...categories]);
               onClose();
             },

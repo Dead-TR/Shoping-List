@@ -20,9 +20,9 @@ export const Layout: FC<Props> = ({}) => {
   return (
     <View style={{ ...css.container, height, width }}>
       <Header />
-      <ScrollView>
+      {/* <ScrollView> */}
         <Routes />
-      </ScrollView>
+      {/* </ScrollView> */}
       <Footer />
     </View>
   );

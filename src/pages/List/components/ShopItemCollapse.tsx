@@ -77,9 +77,9 @@ export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
             <View style={{ ...css.headerElement, ...css.categoryName }}>
               <Icon
                 style={{
+                  ...css.headerIcon,
                   //@ts-ignore
                   color,
-                  ...css.headerIcon,
                 }}
                 icon="arrow"
               />
@@ -185,6 +185,9 @@ const css = StyleSheet.create({
   headerIcon: {
     minWidth: 20,
     minHeight: 20,
+    maxWidth: 20,
+    maxHeight: 20,
+    color: "#000000",
   },
   closed: {
     borderBottomLeftRadius: radius,
@@ -196,7 +199,7 @@ const css = StyleSheet.create({
     gap: 10,
   },
   categoryName: {
-    maxWidth: "80%",
+    maxWidth: "70%",
   },
 
   content: {

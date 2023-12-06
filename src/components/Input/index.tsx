@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -20,9 +20,14 @@ export const Input: FC<Props> = ({
   container,
   defaultValue,
   handleOk,
+  onChangeText,
   ...props
 }) => {
   const [value, setValue] = useState(defaultValue);
+
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   return (
     <View
@@ -37,6 +42,7 @@ export const Input: FC<Props> = ({
         value={value}
         onChange={(e) => {
           setValue(e.nativeEvent.text);
+          onChangeText && onChangeText(e.nativeEvent.text);
         }}
         onBlur={() => handleOk && handleOk(value)}
         style={{
@@ -60,6 +66,6 @@ const css = StyleSheet.create({
     // fontFamily: `"Inter", sans-serif`,
     fontSize: 14,
     fontWeight: "500",
-    color: "currentColor",
+    // color: "currentColor",
   },
 });

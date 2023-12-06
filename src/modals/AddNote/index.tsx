@@ -22,11 +22,12 @@ import { arraySwap } from "../../utils";
 export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
   const { categories } = useCategories();
   const [currentCategory, setCurrentCategory] = useState(-1);
-  const [value, setValue] = useState("");
+  const value = useRef("");
   const [editMode, setEditMode] = useState(false);
 
+  const [defaultValue, setDefaultValue] = useState("");
+
   const values = useRef({
-    value,
     currentCategory,
     categories,
   });
@@ -41,7 +42,8 @@ export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
         setEditMode(true);
         const { element } = state.value;
         const { id, color, text } = element;
-        setValue(text);
+        setDefaultValue(text);
+        value.current = text;
         const catIndex = sortedCategories.findIndex((v) => v.color === color);
         setCurrentCategory(catIndex);
       }
@@ -51,10 +53,9 @@ export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
   }, [state?.value]);
 
   useEffect(() => {
-    values.current.value = value;
     values.current.categories = categories;
     values.current.currentCategory = currentCategory;
-  }, [value, currentCategory, categories]);
+  }, [currentCategory, categories]);
 
   const close = () => {
     requestAnimationFrame(() => onClose());
@@ -67,11 +68,9 @@ export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
         icon: "ok",
         onPress: () => {
           try {
-            debugger;
-
             if (
               values.current.currentCategory < 0 ||
-              !values.current.value ||
+              !value.current ||
               !values.current.categories.length
             )
               return;
@@ -81,9 +80,9 @@ export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
             if (editMode) {
               const { element } = state.value;
               const { id } = element;
-              editElement(id, values.current.value, selectedColor);
+              editElement(id, value.current, selectedColor);
             } else {
-              addElement(selectedColor, values.current.value);
+              addElement(selectedColor, value.current);
             }
 
             close();
@@ -123,21 +122,21 @@ export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
           placeholderTextColor={css.input.color}
           style={css.input}
           color="white"
-          handleOk={setValue}
-          onChangeText={editMode ? setValue : undefined}
-          value={editMode ? value : undefined}
+          handleOk={(v) => (value.current = v)}
+          onChangeText={(v) => (value.current = v)}
+          defaultValue={defaultValue}
         />
       </View>
 
       <View style={css.buttons}>
-        {sortedCategories.map(({ color, name,  }, i) => {
+        {sortedCategories.map(({ color, name }, i) => {
           return (
             <Fragment key={`${color}_${name}_${i}`}>
               <Button
                 style={{
                   ...css.button,
                   backgroundColor: color,
-                  ...(currentCategory === i ? css.selected : {}),
+                  borderColor: currentCategory === i ? "#ffffff" : color,
                 }}
                 onPress={() => setCurrentCategory(i)}>
                 <Text style={css.buttonText} numberOfLines={1}>
@@ -172,8 +171,7 @@ const css = StyleSheet.create({
   button: {
     padding: 7,
     minHeight: 30,
-    width: "31%",
-    color: "#000",
+    width: "30%",
     borderRadius: 10,
     borderWidth: 1,
     borderStyle: "solid",
@@ -182,12 +180,9 @@ const css = StyleSheet.create({
   buttonText: {
     textAlign: "center",
   },
-  selected: {
-    borderColor: "white",
-  },
 
   input: {
-    color: "white",
+    color: "#ffffff",
     textAlign: "center",
   },
   header: {

@@ -1,14 +1,13 @@
 import { FC, Fragment, useMemo, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Appearance, StyleSheet, View } from "react-native";
 import { PageLayout } from "../../components/PageLayout";
 import { Text } from "../../components/Text";
-import { Modal } from "../../components/Modal";
-import { Button } from "../../components/Button";
 import { useModal } from "../../providers/Modal/hook";
 import { useShopList } from "../../providers/ShopList/hook";
 import { ShopItemCollapse } from "./components/ShopItemCollapse";
 import { useCategories } from "../../providers/Categories/hook";
 import { ColorType } from "../../providers/Categories/type";
+
 
 interface Props {
   children?: React.ReactNode;

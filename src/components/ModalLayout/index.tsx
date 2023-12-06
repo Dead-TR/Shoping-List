@@ -15,7 +15,6 @@ const css = StyleSheet.create({
   container: {
     borderRadius: 10,
     backgroundColor: "#1E1E1E",
-    flex: 1,
 
     width: "90%",
     minWidth: 300,

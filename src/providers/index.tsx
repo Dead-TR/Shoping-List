@@ -21,10 +21,10 @@ export const Providers: FC<Props> = ({ children }) => {
           dark: true,
           colors: {
             background: "#1E1E1E",
-            border: "#1E1E1E",
-            card: "#1E1E1E",
-            notification: "#1E1E1E",
-            primary: "#1E1E1E",
+            border: "#ffffff",
+            card: "#ff0000",
+            notification: "#1e1e1e",
+            primary: "#10a8a6",
             text: "#ffffff",
           },
         }}>
