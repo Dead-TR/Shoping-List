@@ -1,10 +1,7 @@
 import React, { FC } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, ScrollView, View } from "react-native";
 
 import { Teleport } from "../Portal/Teleport";
-import { IconType } from "../Icon/type";
-import { Button } from "../Button";
-import { Icon } from "../Icon";
 import { ButtonsMenu, ButtonsMenuProps } from "../ButtonsMenu";
 
 interface Props {
@@ -18,7 +15,7 @@ export const PageLayout: FC<Props> = ({ children, footer, header }) => {
     <View style={css.layout}>
       <Teleport to="header">{header}</Teleport>
 
-      <View>{children}</View>
+      <ScrollView>{children}</ScrollView>
 
       <Teleport to="footer">
         <ButtonsMenu buttons={footer} />

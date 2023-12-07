@@ -7,6 +7,9 @@ export interface ShopElement {
 }
 
 export interface ShopListContextType {
+  /**
+   * Record<color, list>
+   **/
   list: Record<ColorType, ShopElement[]>;
   addElement: (color: ColorType, value: string) => void;
   complete: (id: number) => void;
@@ -14,5 +17,5 @@ export interface ShopListContextType {
   removeElement: (id: number) => void;
   editElement: (id: number, text: string, color: ColorType) => void;
   clear: (color: string) => void;
-  updateList: () => void
+  updateList: () => void;
 }

@@ -48,16 +48,17 @@ export class Storage {
       console.error("remove error", e);
     }
   };
-  save = async (key: string, value: string) => {
+  save = async (key: string, value: string, onlyLocal?: boolean) => {
     try {
       this.store[key] = value;
       this.localStorage.save({ key, data: value });
 
-      // list -- collection
-      // key -- document
-      const docs = doc(dataBase, "list", key);
-
-      await setDoc(docs, { rawData: value });
+      if (!onlyLocal) {
+        // list -- collection
+        // key -- document
+        const docs = doc(dataBase, "list", key);
+        await setDoc(docs, { rawData: value });
+      }
     } catch (e) {
       console.error("save error ", e);
     }

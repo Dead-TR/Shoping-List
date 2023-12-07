@@ -18,8 +18,9 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
       const parsedList = JSON.parse("" + value) as
         | ShopListContextType["list"]
         | null;
-      if (parsedList) return parsedList;
-      else return {} as ShopListContextType["list"];
+      if (parsedList) {
+        return parsedList;
+      } else return {} as ShopListContextType["list"];
     } catch {
       return {} as ShopListContextType["list"];
     }

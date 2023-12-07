@@ -87,10 +87,10 @@ export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
             </View>
 
             <View style={css.headerElement}>
-              <Button onPress={onOk}>
+              <Button style={css.headerButton} onPress={onOk}>
                 <Icon icon="ok" style={css.headerIcon} />
               </Button>
-              <Button onPress={() => setIsModal(true)}>
+              <Button style={css.headerButton} onPress={() => setIsModal(true)}>
                 <Icon icon="trash" style={css.headerIcon} />
               </Button>
             </View>
@@ -177,7 +177,7 @@ const css = StyleSheet.create({
     justifyContent: "space-between",
     gap: 10,
 
-    padding: 10,
+    paddingHorizontal: 10,
     backgroundColor: "#D9D9D9",
     borderTopLeftRadius: radius,
     borderTopRightRadius: radius,
@@ -189,6 +189,9 @@ const css = StyleSheet.create({
     maxHeight: 20,
     color: "#000000",
   },
+  headerButton: {
+    padding: 5,
+  },
   closed: {
     borderBottomLeftRadius: radius,
     borderBottomRightRadius: radius,
@@ -196,10 +199,11 @@ const css = StyleSheet.create({
   headerElement: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
   },
   categoryName: {
     maxWidth: "70%",
+    paddingVertical: 10,
+    gap: 10,
   },
 
   content: {

@@ -16,8 +16,7 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { Text } from "../../components/Text";
 import { useShopList } from "../../providers/ShopList/hook";
-import { CategoryType } from "../../providers/Categories/type";
-import { arraySwap } from "../../utils";
+import { arraySwap, sortCategories } from "../../utils";
 
 export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
   const { categories } = useCategories();
@@ -190,7 +189,4 @@ const css = StyleSheet.create({
   },
 });
 
-const sortCategories = (categories: CategoryType[]) =>
-  categories.sort((a, b) => {
-    return (a.order || 0) - (b.order || 0);
-  });
+

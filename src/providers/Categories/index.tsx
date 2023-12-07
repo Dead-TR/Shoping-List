@@ -4,6 +4,7 @@ import { categoriesStorageKey, colors } from "./config";
 import { useStorage } from "../../hooks/useStorage";
 import { CategoriesContext } from "./context";
 import { CategoryType } from "./type";
+import { sortCategories } from "../../utils";
 
 interface Props {
   children?: React.ReactNode;
@@ -17,6 +18,7 @@ export const CategoriesProvider: FC<Props> = ({ children }) => {
     const setDefault = () => {
       if (!isLoaded) return;
       list.push(...colors.map((color) => ({ color } as CategoryType)));
+      sortCategories(list);
       setValue(JSON.stringify(list));
     };
 

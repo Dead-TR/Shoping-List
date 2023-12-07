@@ -1,5 +1,5 @@
 import { FC, Fragment, useMemo, useState } from "react";
-import { Appearance, StyleSheet, View } from "react-native";
+import { Appearance, ScrollView, StyleSheet, View } from "react-native";
 import { PageLayout } from "../../components/PageLayout";
 import { Text } from "../../components/Text";
 import { useModal } from "../../providers/Modal/hook";
@@ -7,7 +7,6 @@ import { useShopList } from "../../providers/ShopList/hook";
 import { ShopItemCollapse } from "./components/ShopItemCollapse";
 import { useCategories } from "../../providers/Categories/hook";
 import { ColorType } from "../../providers/Categories/type";
-
 
 interface Props {
   children?: React.ReactNode;
@@ -18,12 +17,13 @@ export const List: FC<Props> = ({}) => {
   const { categories } = useCategories();
   const { list } = useShopList();
 
-  const categoriesNames = useMemo(() => {
-    return categories.reduce((acm, { color, name }) => {
-      acm[color] = name || "";
-      return acm;
-    }, {} as Record<ColorType, string>);
-  }, [categories]);
+  const sortedList = useMemo(() => {
+    return categories.map(({ name, color }) => ({
+      name,
+      color,
+      items: list[color],
+    }));
+  }, [categories, list]);
 
   return (
     <PageLayout
@@ -34,14 +34,14 @@ export const List: FC<Props> = ({}) => {
         { icon: "add", onPress: () => setModal("addNote") },
       ]}>
       <View style={css.container}>
-        {Object.entries(list).map(([color, list], i) => {
-          if (!list.length) return null;
+        {sortedList.map(({ color, items, name }, i) => {
+          if (!items || !items?.length) return null;
           return (
             <Fragment key={color + "_" + i}>
               <ShopItemCollapse
                 color={color}
-                categoryName={categoriesNames[color]}
-                list={list}
+                categoryName={name}
+                list={items}
               />
             </Fragment>
           );

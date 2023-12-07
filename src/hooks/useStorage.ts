@@ -18,7 +18,7 @@ const storage = new Storage(() => {
 
 const EVENT_LISTENER = "EVENT-LISTENER-";
 
-export const useStorage = (key: string) => {
+export const useStorage = (key: string, onlyLocal?: boolean) => {
   const [data, setData] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(loading.isLoad);
 
@@ -31,7 +31,7 @@ export const useStorage = (key: string) => {
           storage.remove(key);
         }
       } else {
-        storage.save(key, newValue);
+        storage.save(key, newValue, onlyLocal);
       }
       storageEmitter.emit(EVENT_LISTENER + key, newValue);
     } catch (e) {

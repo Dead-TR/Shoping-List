@@ -21,7 +21,7 @@ export interface ButtonsMenuProps {
 export const ButtonsMenu: FC<ButtonsMenuProps> = ({ buttons, style }) => {
   return (
     <View style={css.menu}>
-      {buttons.map(({ icon, onPress,  }, i) => (
+      {buttons.map(({ icon, onPress }, i) => (
         <Fragment key={icon + i}>
           <Button onPress={onPress}>
             <Icon icon={icon} style={{ ...css.icon, ...(style as object) }} />
@@ -38,6 +38,7 @@ const css = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 40,
+    padding: 10,
   },
   icon: {
     color: "#ffffff",

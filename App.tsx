@@ -1,6 +1,10 @@
+import { registerRootComponent } from "expo";
+
 import "./src/fireBase";
 import { Main } from "./src/Main";
 
 export default function App() {
   return <Main />;
 }
+
+registerRootComponent(App);

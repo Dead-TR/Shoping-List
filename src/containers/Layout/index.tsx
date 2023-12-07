@@ -1,5 +1,6 @@
-import React, { FC, useRef } from "react";
+import React, { FC, useRef, useState } from "react";
 import {
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   View,
@@ -16,22 +17,24 @@ interface Props {
 
 export const Layout: FC<Props> = ({}) => {
   const { height, width } = useWindowDimensions();
+  const [header, setHeader] = useState(0);
+  const [footer, setFooter] = useState(0);
 
   return (
-    <View style={{ ...css.container, height, width }}>
-      <Header />
-      {/* <ScrollView> */}
+    <>
+      <SafeAreaView style={{ height, width, ...css.container }}>
+        <Header onLayout={(width, height) => setHeader(height)} />
         <Routes />
-      {/* </ScrollView> */}
-      <Footer />
-    </View>
+        <Footer onLayout={(width, height) => setFooter(height)} />
+      </SafeAreaView>
+    </>
   );
 };
 
 const css = StyleSheet.create({
   container: {
     backgroundColor: "#1E1E1E",
-    width: "100%",
     padding: 10,
+    flex: 1,
   },
 });

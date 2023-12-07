@@ -7,7 +7,7 @@ import { IconType } from "./type";
 
 interface Props extends Omit<SvgProps, "style"> {
   icon: IconType;
-  style: StyleProp<TextStyle & ViewStyle>;
+  style?: StyleProp<TextStyle & ViewStyle>;
 }
 
 export const Icon: FC<Props> = ({ icon, style, ...props }) => {
