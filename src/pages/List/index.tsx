@@ -1,21 +1,23 @@
 import { FC, Fragment, useMemo, useState } from "react";
-import { Appearance, ScrollView, StyleSheet, View } from "react-native";
-import { PageLayout } from "../../components/PageLayout";
-import { Text } from "../../components/Text";
-import { useModal } from "../../providers/Modal/hook";
-import { useShopList } from "../../providers/ShopList/hook";
+import { StyleSheet, View } from "react-native";
+
 import { ShopItemCollapse } from "./components/ShopItemCollapse";
 import { useCategories } from "../../providers/Categories/hook";
-import { ColorType } from "../../providers/Categories/type";
+import { useShopList } from "../../providers/ShopList/hook";
+import { PageLayout } from "../../components/PageLayout";
+import { Confirm } from "../../components/ConfirmModal";
+import { useModal } from "../../providers/Modal/hook";
+import { Text } from "../../components/Text";
 
 interface Props {
   children?: React.ReactNode;
 }
 
 export const List: FC<Props> = ({}) => {
+  const [isDeleteConfirm, setIsDeleteConfirm] = useState(false);
   const { setModal } = useModal();
   const { categories } = useCategories();
-  const { list } = useShopList();
+  const { list, clear: clearList } = useShopList();
 
   const sortedList = useMemo(() => {
     return categories.map(({ name, color }) => ({
@@ -25,29 +27,42 @@ export const List: FC<Props> = ({}) => {
     }));
   }, [categories, list]);
 
+  const clear = () => {
+    Object.keys(list).forEach((color) => clearList(color));
+  };
+
   return (
-    <PageLayout
-      header={<Text type="big">{"Список Покупок".toUpperCase()}</Text>}
-      footer={[
-        { icon: "pen", onPress: () => setModal("editCategory") },
-        { icon: "trash", onPress: () => {} },
-        { icon: "add", onPress: () => setModal("addNote") },
-      ]}>
-      <View style={css.container}>
-        {sortedList.map(({ color, items, name }, i) => {
-          if (!items || !items?.length) return null;
-          return (
-            <Fragment key={color + "_" + i}>
-              <ShopItemCollapse
-                color={color}
-                categoryName={name}
-                list={items}
-              />
-            </Fragment>
-          );
-        })}
-      </View>
-    </PageLayout>
+    <>
+      <PageLayout
+        header={<Text type="big">{"Список Покупок".toUpperCase()}</Text>}
+        footer={[
+          { icon: "pen", onPress: () => setModal("editCategory") },
+          { icon: "trash", onPress: () => setIsDeleteConfirm(true) },
+          { icon: "add", onPress: () => setModal("addNote") },
+        ]}>
+        <View style={css.container}>
+          {sortedList.map(({ color, items, name }, i) => {
+            if (!items || !items?.length) return null;
+            return (
+              <Fragment key={color + "_" + i}>
+                <ShopItemCollapse
+                  color={color}
+                  categoryName={name}
+                  list={items}
+                />
+              </Fragment>
+            );
+          })}
+        </View>
+
+        <Confirm
+          onOk={clear}
+          isOpen={isDeleteConfirm}
+          onClose={() => setIsDeleteConfirm(false)}>
+          {`Видалити усе?`.toUpperCase()}
+        </Confirm>
+      </PageLayout>
+    </>
   );
 };
 

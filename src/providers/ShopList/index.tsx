@@ -3,23 +3,24 @@ import React, { FC, useMemo } from "react";
 import { useStorage } from "../../hooks/useStorage";
 import { ColorType } from "../Categories/type";
 import { ShopListContext } from "./context";
-import { ShopElement, ShopListContextType } from "./type";
-import { shopListKey } from "./config";
+import { ShopElement, ShopListContextType, StorageShopElement } from "./type";
+import { SHOP_LIST_KEY } from "../../hooks/config";
 
 interface Props {
   children?: React.ReactNode;
 }
 
 export const ShopListProvider: FC<Props> = ({ children }) => {
-  const { setValue, value } = useStorage(shopListKey);
+  const { setValue, value } = useStorage(SHOP_LIST_KEY);
 
   const list = useMemo(() => {
     try {
-      const parsedList = JSON.parse("" + value) as
-        | ShopListContextType["list"]
-        | null;
+      const parsedList = JSON.parse("" + value) as StorageShopElement[] | null;
       if (parsedList) {
-        return parsedList;
+        return parsedList.reduce((acm, { color, list }) => {
+          acm[color] = list;
+          return acm;
+        }, {} as ShopListContextType["list"]);
       } else return {} as ShopListContextType["list"];
     } catch {
       return {} as ShopListContextType["list"];
@@ -28,7 +29,10 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
 
   const updateList = () => {
     try {
-      const stringList = JSON.stringify(list);
+      const storageElement = Object.entries(list).map(([color, list]) => {
+        return { color, list } as StorageShopElement;
+      });
+      const stringList = JSON.stringify(storageElement);
       if (stringList) setValue(stringList);
     } catch (e) {
       console.error("addElement Error: ", e);

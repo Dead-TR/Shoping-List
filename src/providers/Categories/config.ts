@@ -11,5 +11,3 @@ export const colors = [
   "#8C6FFF",
   "#62BC4C",
 ];
-
-export const categoriesStorageKey = 'CATEGORIES'

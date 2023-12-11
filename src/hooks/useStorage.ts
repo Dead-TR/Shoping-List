@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import EventEmitter from "events";
 import { Storage } from "./storage";
+import { EVENT_LISTENER_KEY } from "./config";
 
 const loading: {
   isLoad: boolean;
@@ -16,7 +17,6 @@ const storage = new Storage(() => {
   loading.onLoad.forEach((f) => f());
 });
 
-const EVENT_LISTENER = "EVENT-LISTENER-";
 
 export const useStorage = (key: string, onlyLocal?: boolean) => {
   const [data, setData] = useState<string | null>(null);
@@ -33,7 +33,7 @@ export const useStorage = (key: string, onlyLocal?: boolean) => {
       } else {
         storage.save(key, newValue, onlyLocal);
       }
-      storageEmitter.emit(EVENT_LISTENER + key, newValue);
+      storageEmitter.emit(EVENT_LISTENER_KEY + key, newValue);
     } catch (e) {
       console.error("setValue error", e);
     }
@@ -41,7 +41,7 @@ export const useStorage = (key: string, onlyLocal?: boolean) => {
 
   useEffect(() => {
     const listener = (value: string) => setData(value);
-    storageEmitter.addListener(EVENT_LISTENER + key, listener);
+    storageEmitter.addListener(EVENT_LISTENER_KEY + key, listener);
 
     if (!loading.isLoad) {
       const onLoad = async () => {
@@ -55,7 +55,7 @@ export const useStorage = (key: string, onlyLocal?: boolean) => {
     }
 
     return () => {
-      storageEmitter.removeListener(EVENT_LISTENER + key, listener);
+      storageEmitter.removeListener(EVENT_LISTENER_KEY + key, listener);
     };
   }, [key]);
 

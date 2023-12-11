@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { Icon } from "../../components/Icon";
@@ -12,14 +12,28 @@ interface Props {
 
   onDragEnd: () => void;
   onDragStart: () => void;
+
 }
 
-export const Element: FC<Props> = ({ item, onDragEnd, onDragStart, width }) => {
+export const Element: FC<Props> = ({
+  item,
+  onDragEnd,
+  onDragStart,
+  width,
+}) => {
   const { color, name = "" } = item;
   return (
     <>
-      <View style={{ ...css.wrapper, width: width - 20 }}>
-        <View style={{ ...css.category, backgroundColor: color }}>
+      <View
+        style={{
+          ...css.wrapper,
+          width: width - 20,
+        }}>
+        <View
+          style={{
+            ...css.category,
+            backgroundColor: color,
+          }}>
           <Input
             container={{ style: css.inputBox }}
             style={css.input}

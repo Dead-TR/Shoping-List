@@ -13,6 +13,7 @@ import { useModal } from "../../../providers/Modal/hook";
 import { useShopList } from "../../../providers/ShopList/hook";
 import { Modal } from "../../../components/Modal";
 import { ButtonsMenu } from "../../../components/ButtonsMenu";
+import { Confirm } from "../../../components/ConfirmModal";
 
 interface Props {
   categoryName: string;
@@ -80,6 +81,11 @@ export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
                   ...css.headerIcon,
                   //@ts-ignore
                   color,
+                  transform: [
+                    {
+                      rotate: isOpen ? "180deg" : "0deg",
+                    },
+                  ],
                 }}
                 icon="arrow"
               />
@@ -139,18 +145,9 @@ export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
         </View>
       </Collapse>
 
-      <Modal isOpen={isModal} onClose={() => setIsModal(false)}>
-        <View style={css.modal}>
-          <Text style={css.modalText}>{`Ви певні?`.toUpperCase()}</Text>
-
-          <ButtonsMenu
-            buttons={[
-              { icon: "close", onPress: () => setIsModal(false) },
-              { icon: "ok", onPress: rm },
-            ]}
-          />
-        </View>
-      </Modal>
+      <Confirm isOpen={isModal} onClose={() => setIsModal(false)} onOk={rm}>
+        {`Дійсно видалити?`.toUpperCase()}
+      </Confirm>
     </>
   );
 };
@@ -158,19 +155,6 @@ export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
 const radius = 10;
 
 const css = StyleSheet.create({
-  modal: {
-    backgroundColor: "#1E1E1E",
-    padding: 10,
-    borderRadius: 10,
-    minWidth: 300,
-  },
-  modalText: {
-    textAlign: "center",
-    color: "white",
-    padding: 5,
-    marginBottom: 20,
-    fontWeight: "bold",
-  },
   header: {
     flexDirection: "row",
     alignItems: "center",

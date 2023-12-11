@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { CategoryType } from "../../providers/Categories/type";
@@ -30,8 +30,6 @@ export const List: FC<Props> = ({ categories, setCategories, width }) => {
             />
           );
         }}
-        onDragBegin={() => {}}
-        onDragEnd={() => {}}
         onReordered={(oldI, newI) => {
           categories[oldI].order = newI;
 

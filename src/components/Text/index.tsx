@@ -25,11 +25,11 @@ const css = StyleSheet.create({
   },
   big: {
     color: "white",
-    fontSize: 15,
+    fontSize: 24,
     fontWeight: "600",
   },
   normal: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: "500",
   },
 });

@@ -17,15 +17,13 @@ interface Props {
 
 export const Layout: FC<Props> = ({}) => {
   const { height, width } = useWindowDimensions();
-  const [header, setHeader] = useState(0);
-  const [footer, setFooter] = useState(0);
 
   return (
     <>
       <SafeAreaView style={{ height, width, ...css.container }}>
-        <Header onLayout={(width, height) => setHeader(height)} />
+        <Header  />
         <Routes />
-        <Footer onLayout={(width, height) => setFooter(height)} />
+        <Footer  />
       </SafeAreaView>
     </>
   );

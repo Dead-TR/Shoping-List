@@ -21,6 +21,7 @@ export const Header: FC<Props> = ({ onLayout }) => {
 const css = StyleSheet.create({
   container: {
     paddingVertical: 5,
+    paddingBottom: 15,
     alignItems: "center",
     justifyContent: "center",
   },

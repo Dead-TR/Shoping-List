@@ -6,6 +6,11 @@ export interface ShopElement {
   id: number;
 }
 
+export interface StorageShopElement {
+  color: ColorType;
+  list: ShopElement[];
+}
+
 export interface ShopListContextType {
   /**
    * Record<color, list>
