@@ -7,10 +7,11 @@ import {
   getDocs,
   setDoc,
 } from "firebase/firestore";
-import { dataBase } from "../fireBase";
-import { storeKeysList } from "./config";
+
 import { mergeStorageData, parseData } from "./utils";
+import { storeKeysList } from "./config";
 import { ParsedElement } from "./type";
+import { dataBase } from "../fireBase";
 import { between } from "../utils";
 
 export class Storage {
@@ -24,7 +25,6 @@ export class Storage {
   private store: Record<string, string> = {};
 
   private async getData(onLoad: () => void) {
-    debugger;
     try {
       const serverData = await this.getDataFromServer();
       const localData: typeof this.store = {};
@@ -40,16 +40,10 @@ export class Storage {
         console.error("cant load local data:", e);
       }
 
-      console.log("serverData", serverData);
-      console.log("localData", localData);
-
       const parsedServerData = parseData(serverData);
       const parsedLocalData = parseData(localData);
 
-      console.log("parsedLocalData", parsedLocalData);
-      console.log("parsedServerData", parsedServerData);
       const mergedData = mergeStorageData(parsedServerData, parsedLocalData);
-      console.log("mergedData ", mergedData);
 
       const syncEntries = Object.entries(mergedData);
 

@@ -1,23 +1,11 @@
 {
   "expo": {
-    "extra": {
-      "eas": {
-        "projectId": "4738a483-ffbb-477e-ab85-84addaadab90"
-      }
-    },
-    "userInterfaceStyle": "dark",
-    "ios": {
-      "userInterfaceStyle": "dark"
-    },
-    "android": {
-      "package": "com.deadtr.shoppinglist",
-      "userInterfaceStyle": "dark"
-    },
-    "plugins": [
-      [
-        "./plugins/withDisableForcedDarkModeAndroid.js",
-        {}
-      ]
+    "name": "ShopList",
+    "slug": "ShopList",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
     ]
-  }
+  },
+  "name": "ShopList"
 }

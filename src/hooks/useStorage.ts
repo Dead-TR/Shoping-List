@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import EventEmitter from "events";
-import { Storage } from "./storage";
+
 import { EVENT_LISTENER_KEY } from "./config";
+import { Storage } from "./storage";
 
 const loading: {
   isLoad: boolean;

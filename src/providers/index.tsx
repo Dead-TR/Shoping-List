@@ -1,8 +1,5 @@
 import React, { FC } from "react";
-import {
-  NavigationContainer,
-  NavigationContainerRef,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 
 import { PortalProvider } from "../components/Portal";
 import { ModalProvider } from "./Modal";
