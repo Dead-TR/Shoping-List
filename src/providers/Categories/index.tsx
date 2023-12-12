@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, useMemo, useState } from "react";
 
 import { colors } from "./config";
 import { CategoryType } from "./type";
@@ -12,6 +12,9 @@ interface Props {
 }
 export const CategoriesProvider: FC<Props> = ({ children }) => {
   const { setValue, value, isLoaded } = useStorage(CATEGORIES_STORAGE_KEY);
+  const [defaultOpened, setDefaultOpened] = useState<
+    CategoryType["color"] | null
+  >(null);
 
   const categories = useMemo(() => {
     const list: CategoryType[] = [];
@@ -20,7 +23,7 @@ export const CategoriesProvider: FC<Props> = ({ children }) => {
       if (!isLoaded) return;
       list.push(...colors.map((color) => ({ color } as CategoryType)));
       sortCategories(list);
-      setValue(JSON.stringify(list));
+      // setValue(JSON.stringify(list));
     };
 
     try {
@@ -31,8 +34,13 @@ export const CategoriesProvider: FC<Props> = ({ children }) => {
     } catch {
       setDefault();
     }
-    return list;
-  }, [value, isLoaded]);
+
+    list.forEach((v) => {
+      if (v.color === defaultOpened) v.defaultOpened = true;
+      else v.defaultOpened = false;
+    });
+    return [...list];
+  }, [value, isLoaded, defaultOpened]);
 
   const updateCategories = (value: CategoryType[]) => {
     try {
@@ -41,8 +49,13 @@ export const CategoriesProvider: FC<Props> = ({ children }) => {
     } catch {}
   };
 
+  const openCategory = (color: null | CategoryType["color"]) => {
+    setDefaultOpened(color);
+  };
+
   return (
-    <CategoriesContext.Provider value={{ categories, updateCategories }}>
+    <CategoriesContext.Provider
+      value={{ categories, updateCategories, openCategory }}>
       {children}
     </CategoriesContext.Provider>
   );

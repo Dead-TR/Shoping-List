@@ -19,15 +19,24 @@ interface Props {
   categoryName: string;
   color: ColorType;
   list: ShopElement[];
+
+  defaultOpened?: boolean;
+  disableDefaultOpen?: () => void;
 }
 
 const { clearTimeouts, pushTimeout } = createTimeouts();
 
-export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
+export const ShopItemCollapse: FC<Props> = ({
+  categoryName,
+  color,
+  list,
+  defaultOpened = false,
+  disableDefaultOpen,
+}) => {
   const { state, setModal } = useModal();
   const { complete, updateList } = useShopList();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(defaultOpened);
   const [isModal, setIsModal] = useState(false);
 
   const prevValue = useRef(isOpen);
@@ -44,12 +53,18 @@ export const ShopItemCollapse: FC<Props> = ({ categoryName, color, list }) => {
       }, COLLAPSE_DEFAULT_DURATION);
     }
 
+    if (!isOpen && disableDefaultOpen) disableDefaultOpen();
+
     prevValue.current = isOpen;
 
     return () => {
       clearTimeouts();
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (defaultOpened) setIsOpen(true);
+  }, [defaultOpened]);
 
   const onOk = () => {
     const isComplete = !list.find(({ isComplete }) => !isComplete);

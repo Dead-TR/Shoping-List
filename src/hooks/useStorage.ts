@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import EventEmitter from "events";
 
-import { EVENT_LISTENER_KEY } from "./config";
+import { EVENT_LISTENER_KEY, SHOP_LIST_KEY } from "./config";
 import { Storage } from "./storage";
 
 const loading: {
@@ -17,7 +17,6 @@ const storage = new Storage(() => {
   loading.isLoad = true;
   loading.onLoad.forEach((f) => f());
 });
-
 
 export const useStorage = (key: string, onlyLocal?: boolean) => {
   const [data, setData] = useState<string | null>(null);
@@ -41,13 +40,16 @@ export const useStorage = (key: string, onlyLocal?: boolean) => {
   };
 
   useEffect(() => {
-    const listener = (value: string) => setData(value);
+    const listener = (value: string) => {
+      setData(value);
+    };
     storageEmitter.addListener(EVENT_LISTENER_KEY + key, listener);
 
     if (!loading.isLoad) {
       const onLoad = async () => {
         const result = await storage.get(key);
-        setData(result);
+
+        if (key) setData(result);
 
         setIsLoaded(true);
       };
@@ -62,7 +64,10 @@ export const useStorage = (key: string, onlyLocal?: boolean) => {
 
   useEffect(() => {
     if (isLoaded && !data) {
-      storage.get(key).then((value) => setData(value));
+      storage.get(key).then((value) => {
+        if (key === SHOP_LIST_KEY) console.log("🚀 ~ ~ ~ >", value);
+        setData(value);
+      });
     }
   }, [isLoaded]);
 

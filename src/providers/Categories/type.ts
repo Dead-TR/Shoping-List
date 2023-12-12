@@ -6,4 +6,6 @@ export interface CategoryType {
   color: ColorType;
   order?: number;
   name?: string;
+
+  defaultOpened?: boolean;
 }

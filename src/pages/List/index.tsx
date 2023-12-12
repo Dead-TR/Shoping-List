@@ -20,10 +20,11 @@ export const List: FC<Props> = ({}) => {
   const { list, clear: clearList } = useShopList();
 
   const sortedList = useMemo(() => {
-    return categories.map(({ name, color }) => ({
+    return categories.map(({ name, color, defaultOpened }) => ({
       name,
       color,
       items: list[color],
+      defaultOpened,
     }));
   }, [categories, list]);
 
@@ -41,7 +42,8 @@ export const List: FC<Props> = ({}) => {
           { icon: "add", onPress: () => setModal("addNote") },
         ]}>
         <View style={css.container}>
-          {sortedList.map(({ color, items, name }, i) => {
+          {sortedList.map((category, i) => {
+            const { color, items, name, defaultOpened } = category;
             if (!items || !items?.length) return null;
             return (
               <Fragment key={color + "_" + i}>
@@ -49,6 +51,8 @@ export const List: FC<Props> = ({}) => {
                   color={color}
                   categoryName={name}
                   list={items}
+                  defaultOpened={defaultOpened}
+                  disableDefaultOpen={() => (category.defaultOpened = false)}
                 />
               </Fragment>
             );

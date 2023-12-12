@@ -5,6 +5,7 @@ import { ColorType } from "../Categories/type";
 import { ShopListContext } from "./context";
 import { ShopElement, ShopListContextType, StorageShopElement } from "./type";
 import { SHOP_LIST_KEY } from "../../hooks/config";
+import { useCategories } from "../Categories/hook";
 
 interface Props {
   children?: React.ReactNode;
@@ -12,6 +13,7 @@ interface Props {
 
 export const ShopListProvider: FC<Props> = ({ children }) => {
   const { setValue, value } = useStorage(SHOP_LIST_KEY);
+  const { openCategory } = useCategories();
 
   const list = useMemo(() => {
     try {
@@ -49,6 +51,7 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
     });
 
     updateList();
+    openCategory(color);
   };
 
   const removeElement = (id: number) => {

@@ -4,4 +4,5 @@ import { CategoryType } from "./type";
 export const CategoriesContext = createContext<{
   categories: CategoryType[];
   updateCategories: (v: CategoryType[]) => void;
-}>({ categories: [], updateCategories: () => {} });
+  openCategory: (color: null | CategoryType["color"]) => void;
+}>({ categories: [], updateCategories: () => {}, openCategory: () => {} });

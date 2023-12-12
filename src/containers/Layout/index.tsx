@@ -14,7 +14,6 @@ interface Props {
   children?: React.ReactNode;
 }
 
-// AvoidSoftInput.setAdjustNothing();
 
 export const Layout: FC<Props> = ({}) => {
   const { height, width } = useWindowDimensions();
