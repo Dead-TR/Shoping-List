@@ -14,7 +14,6 @@ interface Props {
   children?: React.ReactNode;
 }
 
-
 export const Layout: FC<Props> = ({}) => {
   const { height, width } = useWindowDimensions();
 
@@ -33,7 +32,7 @@ export const Layout: FC<Props> = ({}) => {
   return (
     <>
       <AvoidSoftInputView avoidOffset={0} style={css.container}>
-        <SafeAreaView style={{ height, width, ...css.container }}>
+        <SafeAreaView style={{ height: height - 20, width, ...css.container }}>
           <Header />
           <Routes />
           <Footer />

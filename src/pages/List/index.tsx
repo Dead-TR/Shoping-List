@@ -1,5 +1,5 @@
-import { FC, Fragment, useMemo, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { FC, Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { StyleSheet, View, Animated } from "react-native";
 
 import { ShopItemCollapse } from "./components/ShopItemCollapse";
 import { useCategories } from "../../providers/Categories/hook";
@@ -8,34 +8,95 @@ import { PageLayout } from "../../components/PageLayout";
 import { Confirm } from "../../components/ConfirmModal";
 import { useModal } from "../../providers/Modal/hook";
 import { Text } from "../../components/Text";
+import { ShopElement } from "../../providers/ShopList/type";
+
+import Loader from "./Loader";
 
 interface Props {
   children?: React.ReactNode;
 }
 
+interface SortedContentElement {
+  name: string;
+  color: string;
+  items: ShopElement[];
+  defaultOpened: boolean;
+}
+
 export const List: FC<Props> = ({}) => {
   const [isDeleteConfirm, setIsDeleteConfirm] = useState(false);
-  const { setModal } = useModal();
-  const { categories } = useCategories();
-  const { list, clear: clearList } = useShopList();
+  const [sortedList, setSortedList] = useState<SortedContentElement[]>([]);
 
-  const sortedList = useMemo(() => {
-    return categories.map(({ name, color, defaultOpened }) => ({
+  const { setModal } = useModal();
+  const { categories, isSync: categoriesSync } = useCategories();
+  const { list, clear: clearList, isSync: shopSync } = useShopList();
+
+  const animation = useRef(new Animated.Value(0)).current;
+
+  const rotate = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["360deg", "0deg"],
+  });
+
+  const play = categoriesSync || shopSync;
+
+  useEffect(() => {
+    const start = () => {
+      Animated.timing(animation, {
+        toValue: 1,
+        useNativeDriver: true,
+        duration: 1000,
+      }).start();
+    };
+    if (play) {
+      animation.resetAnimation();
+      animation.setValue(0);
+      start();
+
+      animation.addListener(({ value }) => {
+        if (value === 1) {
+          animation.setValue(0);
+          start();
+        }
+      });
+    } else {
+      animation.stopAnimation();
+    }
+  }, [categoriesSync, shopSync]);
+
+  useEffect(() => {
+    const updatedList = categories.map(({ name, color, defaultOpened }) => ({
       name,
       color,
-      items: list[color],
+      items: list[color]?.list || [],
       defaultOpened,
     }));
+
+    setSortedList(updatedList);
   }, [categories, list]);
 
   const clear = () => {
     Object.keys(list).forEach((color) => clearList(color));
   };
 
+  console.log(play, categoriesSync, shopSync);
+
   return (
     <>
       <PageLayout
-        header={<Text type="big">{"Список Покупок".toUpperCase()}</Text>}
+        header={
+          <View style={css.header}>
+            {play && (
+              <Animated.View style={{ ...css.loader, transform: [{ rotate }] }}>
+                <Loader />
+              </Animated.View>
+            )}
+
+            <Text style={css.title} type="big">
+              {"Список Покупок".toUpperCase()}
+            </Text>
+          </View>
+        }
         footer={[
           { icon: "pen", onPress: () => setModal("editCategory") },
           { icon: "trash", onPress: () => setIsDeleteConfirm(true) },
@@ -73,5 +134,20 @@ export const List: FC<Props> = ({}) => {
 const css = StyleSheet.create({
   container: {
     gap: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  header: {
+    width: "100%",
+    height: "100%",
+  },
+  title: {
+    textAlign: "center",
+  },
+  loader: {
+    color: "white",
+    position: "absolute",
+    right: 20,
+    top: "-100%",
   },
 });

@@ -1,32 +1,46 @@
-import { ParsedStorageData } from "../type";
+import { ContentElement, StorageData } from "../type";
 
 export const mergeStorageData = (
-  data1: ParsedStorageData,
-  data2: ParsedStorageData,
+  serverData: StorageData,
+  localData: StorageData,
 ) => {
-  const merged: ParsedStorageData = {};
+  const merged: StorageData = {};
 
-  for (const key in data1) {
-    merged[key] = [...(data1[key] || [])];
-  }
+  for (const key in serverData) {
+    merged[key] = [];
+    const serverArr = serverData[key];
+    const localArr = localData[key] || [];
 
-  for (const key in data2) {
-    merged[key] = merged[key] || [];
-
-    data2[key].forEach((el2) => {
+    serverArr.forEach((serverEl) => {
       let exists = false;
 
-      merged[key].forEach((el1) => {
-        if (el1.id === el2.id) {
-          if (el1.saveTime < el2.saveTime) {
-            el1.saveTime = el2.saveTime;
+      localArr.forEach((localEl) => {
+        if (serverEl.id === localEl.id) {
+          if (serverEl.saveTime > localEl.saveTime) {
+            merged[key].push(serverEl);
+          } else {
+            merged[key].push(localEl);
           }
           exists = true;
         }
       });
 
       if (!exists) {
-        merged[key].push(el2);
+        merged[key].push(serverEl);
+      }
+    });
+
+    localArr.forEach((localEl) => {
+      let exists = false;
+
+      merged[key].forEach((mergedEl) => {
+        if (localEl.id === mergedEl.id) {
+          exists = true;
+        }
+      });
+
+      if (!exists) {
+        merged[key].push(localEl);
       }
     });
   }

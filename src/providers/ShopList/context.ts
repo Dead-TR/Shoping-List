@@ -3,6 +3,10 @@ import { ShopListContextType } from "./type";
 
 export const ShopListContext = createContext<ShopListContextType>({
   list: {},
-  addElement: () => {},
   complete: () => {},
+  addElement: () => {},
+  editElement: () => {},
+  removeElement: () => {},
+  updateList: () => {},
+  clear: () => {},
 });

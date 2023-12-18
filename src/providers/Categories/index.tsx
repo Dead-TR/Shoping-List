@@ -11,7 +11,9 @@ interface Props {
   children?: React.ReactNode;
 }
 export const CategoriesProvider: FC<Props> = ({ children }) => {
-  const { setValue, value, isLoaded } = useStorage(CATEGORIES_STORAGE_KEY);
+  const { setValue, value, isLoaded, isSync } = useStorage<CategoryType>(
+    CATEGORIES_STORAGE_KEY,
+  );
   const [defaultOpened, setDefaultOpened] = useState<
     CategoryType["color"] | null
   >(null);
@@ -23,13 +25,10 @@ export const CategoriesProvider: FC<Props> = ({ children }) => {
       if (!isLoaded) return;
       list.push(...colors.map((color) => ({ color } as CategoryType)));
       sortCategories(list);
-      // setValue(JSON.stringify(list));
     };
 
     try {
-      const parsedData = JSON.parse("" + value) as CategoryType[] | null;
-
-      if (parsedData) list.push(...parsedData);
+      if (value.length) list.push(...value);
       else setDefault();
     } catch {
       setDefault();
@@ -44,8 +43,7 @@ export const CategoriesProvider: FC<Props> = ({ children }) => {
 
   const updateCategories = (value: CategoryType[]) => {
     try {
-      const strValue = JSON.stringify(value);
-      setValue(strValue);
+      setValue(value);
     } catch {}
   };
 
@@ -55,7 +53,7 @@ export const CategoriesProvider: FC<Props> = ({ children }) => {
 
   return (
     <CategoriesContext.Provider
-      value={{ categories, updateCategories, openCategory }}>
+      value={{ categories, updateCategories, openCategory, isSync }}>
       {children}
     </CategoriesContext.Provider>
   );

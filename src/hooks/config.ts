@@ -1,6 +1,8 @@
 export const EVENT_LISTENER_KEY = "EVENT-LISTENER-";
 
-export const CATEGORIES_STORAGE_KEY = "CATEGORIES";
-export const SHOP_LIST_KEY = "SHOP-LIST-KEY";
+export const CATEGORIES_STORAGE_KEY = "CATEGORIES-LIST";
+export const SHOP_LIST_KEY = "SHOP-LIST-KEYS";
 
 export const storeKeysList = [CATEGORIES_STORAGE_KEY, SHOP_LIST_KEY];
+
+export const ON_LOAD_LISTENER = "ON_LOAD_LISTENER";

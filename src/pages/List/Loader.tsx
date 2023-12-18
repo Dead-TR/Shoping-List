@@ -1,0 +1,62 @@
+import * as React from "react";
+import Svg, { Circle } from "react-native-svg";
+const SvgComponent = (props) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    {...props}>
+    <Circle cx={12} cy={2} r={2} fill="currentColor" />
+    <Circle
+      cx={12}
+      cy={2}
+      r={1.78125}
+      fill="currentColor"
+      transform="rotate(45 12 12)"
+    />
+    <Circle
+      cx={12}
+      cy={2}
+      r={1.5625}
+      fill="currentColor"
+      transform="rotate(90 12 12)"
+    />
+    <Circle
+      cx={12}
+      cy={2}
+      r={1.34375}
+      fill="currentColor"
+      transform="rotate(135 12 12)"
+    />
+    <Circle
+      cx={12}
+      cy={2}
+      r={1.125}
+      fill="currentColor"
+      transform="rotate(180 12 12)"
+    />
+    <Circle
+      cx={12}
+      cy={2}
+      r={0.90625}
+      fill="currentColor"
+      transform="rotate(225 12 12)"
+    />
+    <Circle
+      cx={12}
+      cy={2}
+      r={0.6875}
+      fill="currentColor"
+      transform="rotate(270 12 12)"
+    />
+    <Circle
+      cx={12}
+      cy={2}
+      r={0.46875}
+      fill="currentColor"
+      transform="rotate(315 12 12)"
+    />
+  </Svg>
+);
+export default SvgComponent;

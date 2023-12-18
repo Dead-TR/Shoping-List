@@ -12,18 +12,16 @@ interface Props {
 }
 
 export const ShopListProvider: FC<Props> = ({ children }) => {
-  const { setValue, value } = useStorage(SHOP_LIST_KEY);
+  const { setValue, value, isSync } =
+    useStorage<StorageShopElement>(SHOP_LIST_KEY);
   const { openCategory } = useCategories();
 
   const list = useMemo(() => {
     try {
-      const parsedList = JSON.parse("" + value) as StorageShopElement[] | null;
-      if (parsedList) {
-        return parsedList.reduce((acm, { color, list }) => {
-          acm[color] = list;
-          return acm;
-        }, {} as ShopListContextType["list"]);
-      } else return {} as ShopListContextType["list"];
+      return value.reduce((acm, data) => {
+        acm[data.color] = data;
+        return acm;
+      }, {} as ShopListContextType["list"]);
     } catch {
       return {} as ShopListContextType["list"];
     }
@@ -31,21 +29,28 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
 
   const updateList = () => {
     try {
-      const storageElement = Object.entries(list).map(([color, list]) => {
-        return { color, list } as StorageShopElement;
+      const storageElement = Object.entries(list).map(([color, data]) => {
+        return { ...data } as StorageShopElement;
       });
-      const stringList = JSON.stringify(storageElement);
-      if (stringList) setValue(stringList);
+
+      setValue(storageElement);
     } catch (e) {
       console.error("addElement Error: ", e);
     }
   };
 
   const addElement = (color: ColorType, value: string) => {
-    if (!list[color]) list[color] = [];
+    const currentTime = Date.now();
+    if (!list[color])
+      list[color] = {
+        color,
+        id: currentTime,
+        list: [],
+        saveTime: currentTime,
+      };
 
-    list[color].push({
-      id: Date.now(),
+    list[color].list.push({
+      id: currentTime,
       isComplete: false,
       text: value,
     });
@@ -56,7 +61,7 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
 
   const removeElement = (id: number) => {
     for (const color in list) {
-      list[color] = list[color].filter((e) => e.id !== id);
+      list[color].list = list[color].list.filter((e) => e.id !== id);
     }
 
     updateList();
@@ -66,11 +71,11 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
     let currentElement: ShopElement;
 
     for (const color in list) {
-      const current = list[color].find((e) => e.id === id);
+      const current = list[color].list.find((e) => e.id === id);
 
       if (current) {
         currentElement = current;
-        list[color] = list[color].filter((e) => e.id !== id);
+        list[color].list = list[color].list.filter((e) => e.id !== id);
         break;
       }
     }
@@ -78,7 +83,15 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
     if (currentElement) {
       currentElement.text = text;
 
-      if (!list[color]) list[color] = [];
+      if (!list[color]) {
+        const currentTime = Date.now();
+        list[color] = {
+          color,
+          id: currentTime,
+          list: [],
+          saveTime: currentTime,
+        };
+      }
 
       list[color].push(currentElement);
     }
@@ -88,12 +101,14 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
 
   const complete = (id: number) => {
     let currentElement: ShopElement;
+    let currentStorage: StorageShopElement;
 
     for (const color in list) {
-      const current = list[color].find((e) => e.id === id);
+      const current = list[color].list.find((e) => e.id === id);
 
       if (current) {
         currentElement = current;
+        currentStorage = list[color];
         break;
       }
     }
@@ -102,6 +117,7 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
       if (currentElement.isComplete === undefined)
         currentElement.isComplete = false;
       currentElement.isComplete = !currentElement.isComplete;
+      currentStorage.saveTime = Date.now();
     }
 
     updateList();
@@ -118,6 +134,7 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
   return (
     <ShopListContext.Provider
       value={{
+        isSync,
         list,
         complete,
         addElement,

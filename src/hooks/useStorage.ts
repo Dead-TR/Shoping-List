@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import EventEmitter from "events";
 
-import { EVENT_LISTENER_KEY, SHOP_LIST_KEY } from "./config";
 import { Storage } from "./storage";
+import { ContentElement } from "./type";
 
 const loading: {
   isLoad: boolean;
@@ -12,17 +11,20 @@ const loading: {
   onLoad: [],
 };
 
-const storageEmitter = new EventEmitter();
 const storage = new Storage(() => {
   loading.isLoad = true;
   loading.onLoad.forEach((f) => f());
 });
 
-export const useStorage = (key: string, onlyLocal?: boolean) => {
-  const [data, setData] = useState<string | null>(null);
+export const useStorage = <V extends ContentElement>(
+  key: string,
+  onlyLocal?: boolean,
+) => {
+  const [data, setData] = useState<V[] | null>(null);
   const [isLoaded, setIsLoaded] = useState(loading.isLoad);
+  const [isSync, setIsSync] = useState(false);
 
-  const setValue = (newValue: string | null) => {
+  const setValue = (newValue: V[] | null) => {
     try {
       setData(newValue);
 
@@ -33,21 +35,24 @@ export const useStorage = (key: string, onlyLocal?: boolean) => {
       } else {
         storage.save(key, newValue, onlyLocal);
       }
-      storageEmitter.emit(EVENT_LISTENER_KEY + key, newValue);
+      storage.emitter.emit(key, newValue);
     } catch (e) {
       console.error("setValue error", e);
     }
   };
 
   useEffect(() => {
-    const listener = (value: string) => {
+    const listener = (value: V[]) => {
       setData(value);
     };
-    storageEmitter.addListener(EVENT_LISTENER_KEY + key, listener);
+    const rm = storage.emitter.addListener(key, listener);
+    const syncRm = storage.loaderListener((is) => {
+      setIsSync(is);
+    });
 
     if (!loading.isLoad) {
       const onLoad = async () => {
-        const result = await storage.get(key);
+        const result = await storage.get<V>(key);
 
         if (key) setData(result);
 
@@ -58,14 +63,14 @@ export const useStorage = (key: string, onlyLocal?: boolean) => {
     }
 
     return () => {
-      storageEmitter.removeListener(EVENT_LISTENER_KEY + key, listener);
+      rm();
+      syncRm();
     };
   }, [key]);
 
   useEffect(() => {
     if (isLoaded && !data) {
-      storage.get(key).then((value) => {
-        if (key === SHOP_LIST_KEY) console.log("🚀 ~ ~ ~ >", value);
+      storage.get<V>(key).then((value) => {
         setData(value);
       });
     }
@@ -75,5 +80,6 @@ export const useStorage = (key: string, onlyLocal?: boolean) => {
     value: data,
     setValue,
     isLoaded,
+    isSync,
   };
 };

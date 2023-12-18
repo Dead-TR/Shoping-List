@@ -26,7 +26,8 @@ export const ModalContainer: FC = ({}) => {
   return (
     <>
       <PortalGate gateName="modal" />
-      <Component onClose={close} state={state} />
+
+      {isOpen ? <Component onClose={close} state={state} /> : null}
     </>
   );
 };

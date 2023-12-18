@@ -1,3 +1,4 @@
+import { ContentElement } from "../../hooks/type";
 import { ColorType } from "../Categories/type";
 
 export interface ShopElement {
@@ -6,7 +7,7 @@ export interface ShopElement {
   id: number;
 }
 
-export interface StorageShopElement {
+export interface StorageShopElement extends ContentElement {
   color: ColorType;
   list: ShopElement[];
 }
@@ -15,7 +16,7 @@ export interface ShopListContextType {
   /**
    * Record<color, list>
    **/
-  list: Record<ColorType, ShopElement[]>;
+  list: Record<ColorType, StorageShopElement>;
   addElement: (color: ColorType, value: string) => void;
   complete: (id: number) => void;
 
@@ -23,4 +24,6 @@ export interface ShopListContextType {
   editElement: (id: number, text: string, color: ColorType) => void;
   clear: (color: string) => void;
   updateList: () => void;
+
+  isSync: boolean;
 }
