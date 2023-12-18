@@ -32,7 +32,7 @@ export const Layout: FC<Props> = ({}) => {
   return (
     <>
       <AvoidSoftInputView avoidOffset={0} style={css.container}>
-        <SafeAreaView style={{ height: height - 20, width, ...css.container }}>
+        <SafeAreaView style={{ height: height, width, ...css.container }}>
           <Header />
           <Routes />
           <Footer />

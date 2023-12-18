@@ -98,12 +98,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-    // release {
-    //     storeFile file('your_key_name.keystore')
-    //     storePassword '84528452'
-    //     keyAlias 'your_key_alias'
-    //     keyPassword '84528452'
-    // }
+    release {
+        storeFile file('your_key_name.keystore')
+        storePassword '84528452'
+        keyAlias 'your_key_alias'
+        keyPassword '84528452'
+    }
     }
     buildTypes {
         debug {
@@ -118,14 +118,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    // buildscript {
-    //     ext {
-    //         buildToolsVersion = 'xx.yy.zz'
-    //         minSdkVersion = xyz
-    //         compileSdkVersion = xyz
-    //         targetSdkVersion = xyz
-    //     }
-    // }
 }
 
 // Apply static values from `gradle.properties` to the `android.packagingOptions`

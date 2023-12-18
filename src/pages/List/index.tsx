@@ -79,8 +79,6 @@ export const List: FC<Props> = ({}) => {
     Object.keys(list).forEach((color) => clearList(color));
   };
 
-  console.log(play, categoriesSync, shopSync);
-
   return (
     <>
       <PageLayout
@@ -88,7 +86,7 @@ export const List: FC<Props> = ({}) => {
           <View style={css.header}>
             {play && (
               <Animated.View style={{ ...css.loader, transform: [{ rotate }] }}>
-                <Loader />
+                <Loader style={css.loaderItem} />
               </Animated.View>
             )}
 
@@ -139,15 +137,15 @@ const css = StyleSheet.create({
   },
   header: {
     width: "100%",
-    height: "100%",
   },
   title: {
     textAlign: "center",
   },
   loader: {
-    color: "white",
     position: "absolute",
     right: 20,
-    top: "-100%",
+  },
+  loaderItem: {
+    color: "white",
   },
 });

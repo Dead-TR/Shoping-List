@@ -1,14 +1,14 @@
 import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { ModalProps } from "../../config/type";
 import { useCategories } from "../../providers/Categories/hook";
+import { CategoryType } from "../../providers/Categories/type";
 import { ButtonsMenu } from "../../components/ButtonsMenu";
 import { ModalLayout } from "../../components/ModalLayout";
+import { ModalProps } from "../../config/type";
 import { Text } from "../../components/Text";
 import { sortCategories } from "../../utils";
 import { List } from "./List";
-import { CategoryType } from "../../providers/Categories/type";
 
 export const EditCategories: FC<ModalProps> = ({ onClose }) => {
   const { categories, updateCategories } = useCategories();
@@ -17,22 +17,8 @@ export const EditCategories: FC<ModalProps> = ({ onClose }) => {
   const [sortedCategories, setSortedCategories] = useState<CategoryType[]>([]);
 
   useEffect(() => {
-
-
     setSortedCategories(sortCategories(categories));
   }, []);
-
-  // useEffect(() => {
-  //   console.log("update categories ---------------");
-  //   console.log(
-  //     "sorted: ",
-  //     sortedCategories.map(({ color, order }) => `${order}_${color}`),
-  //   );
-  //   console.log(
-  //     "default: ",
-  //     categories.map(({ color, order }) => `${order}_${color}`),
-  //   );
-  // }, [sortedCategories]);
 
   return (
     <ModalLayout style={css.container}>

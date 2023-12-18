@@ -39,7 +39,7 @@ const css = StyleSheet.create({
     justifyContent: "center",
     gap: 40,
     padding: 10,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   icon: {
     color: "#ffffff",
