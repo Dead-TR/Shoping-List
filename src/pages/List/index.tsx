@@ -69,7 +69,7 @@ export const List: FC<Props> = ({}) => {
       name,
       color,
       items: list[color]?.list || [],
-      opened: !!opened,
+      opened,
     }));
 
     setSortedList(updatedList);
@@ -110,7 +110,7 @@ export const List: FC<Props> = ({}) => {
                   color={color}
                   categoryName={name}
                   list={items}
-                  opened={!!opened}
+                  opened={opened}
                   setIsOpened={(is) => openCategory(color, is)}
                 />
               </Fragment>

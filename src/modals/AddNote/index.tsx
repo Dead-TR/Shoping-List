@@ -19,7 +19,7 @@ import { useShopList } from "../../providers/ShopList/hook";
 import { arraySwap, sortCategories } from "../../utils";
 
 export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
-  const { categories } = useCategories();
+  const { categories, openCategory } = useCategories();
   const [currentCategory, setCurrentCategory] = useState(-1);
   const value = useRef("");
   const [editMode, setEditMode] = useState(false);
@@ -84,6 +84,7 @@ export const AddNote: FC<ModalProps> = ({ onClose, state }) => {
               addElement(selectedColor, value.current);
             }
 
+            openCategory(selectedColor, true);
             close();
           } catch (e) {
             console.error(e);

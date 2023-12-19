@@ -11,8 +11,6 @@ import { createTimeouts } from "../../../utils";
 import { COLLAPSE_DEFAULT_DURATION } from "../../../components/Collapse/config";
 import { useModal } from "../../../providers/Modal/hook";
 import { useShopList } from "../../../providers/ShopList/hook";
-import { Modal } from "../../../components/Modal";
-import { ButtonsMenu } from "../../../components/ButtonsMenu";
 import { Confirm } from "../../../components/ConfirmModal";
 import { useCategories } from "../../../providers/Categories/hook";
 
@@ -42,7 +40,7 @@ export const ShopItemCollapse: FC<Props> = ({
   const [isModal, setIsModal] = useState(false);
 
   const prevValue = useRef(isOpen);
-  const [isBorder, setIsBorder] = useState(false);
+  const [isBorder, setIsBorder] = useState(isOpen);
 
   useEffect(() => {
     clearTimeouts();
