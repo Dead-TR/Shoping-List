@@ -56,7 +56,7 @@ export const ShopListProvider: FC<Props> = ({ children }) => {
     });
 
     updateList();
-    openCategory(color);
+    openCategory(color, true);
   };
 
   const removeElement = (id: number) => {

@@ -20,7 +20,7 @@ interface SortedContentElement {
   name: string;
   color: string;
   items: ShopElement[];
-  defaultOpened: boolean;
+  opened: boolean;
 }
 
 export const List: FC<Props> = ({}) => {
@@ -28,7 +28,7 @@ export const List: FC<Props> = ({}) => {
   const [sortedList, setSortedList] = useState<SortedContentElement[]>([]);
 
   const { setModal } = useModal();
-  const { categories, isSync: categoriesSync } = useCategories();
+  const { categories, isSync: categoriesSync, openCategory } = useCategories();
   const { list, clear: clearList, isSync: shopSync } = useShopList();
 
   const animation = useRef(new Animated.Value(0)).current;
@@ -65,11 +65,11 @@ export const List: FC<Props> = ({}) => {
   }, [categoriesSync, shopSync]);
 
   useEffect(() => {
-    const updatedList = categories.map(({ name, color, defaultOpened }) => ({
+    const updatedList = categories.map(({ name, color, opened }) => ({
       name,
       color,
       items: list[color]?.list || [],
-      defaultOpened,
+      opened: !!opened,
     }));
 
     setSortedList(updatedList);
@@ -102,7 +102,7 @@ export const List: FC<Props> = ({}) => {
         ]}>
         <View style={css.container}>
           {sortedList.map((category, i) => {
-            const { color, items, name, defaultOpened } = category;
+            const { color, items, name, opened } = category;
             if (!items || !items?.length) return null;
             return (
               <Fragment key={color + "_" + i}>
@@ -110,8 +110,8 @@ export const List: FC<Props> = ({}) => {
                   color={color}
                   categoryName={name}
                   list={items}
-                  defaultOpened={defaultOpened}
-                  disableDefaultOpen={() => (category.defaultOpened = false)}
+                  opened={!!opened}
+                  setIsOpened={(is) => openCategory(color, is)}
                 />
               </Fragment>
             );

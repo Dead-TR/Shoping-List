@@ -5,7 +5,10 @@ export const CategoriesContext = createContext<{
   isSync: boolean;
   categories: CategoryType[];
   updateCategories: (v: CategoryType[]) => void;
-  openCategory: (color: null | CategoryType["color"]) => void;
+  openCategory: (
+    color: null | CategoryType["color"],
+    isOpened: boolean,
+  ) => void;
 }>({
   categories: [],
   isSync: false,

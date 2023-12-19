@@ -14,14 +14,15 @@ import { useShopList } from "../../../providers/ShopList/hook";
 import { Modal } from "../../../components/Modal";
 import { ButtonsMenu } from "../../../components/ButtonsMenu";
 import { Confirm } from "../../../components/ConfirmModal";
+import { useCategories } from "../../../providers/Categories/hook";
 
 interface Props {
   categoryName: string;
   color: ColorType;
   list: ShopElement[];
 
-  defaultOpened?: boolean;
-  disableDefaultOpen?: () => void;
+  opened: boolean;
+  setIsOpened: (v: boolean) => void;
 }
 
 const { clearTimeouts, pushTimeout } = createTimeouts();
@@ -30,13 +31,14 @@ export const ShopItemCollapse: FC<Props> = ({
   categoryName,
   color,
   list,
-  defaultOpened = false,
-  disableDefaultOpen,
+  opened,
+  setIsOpened,
 }) => {
   const { state, setModal } = useModal();
+  const { openCategory } = useCategories();
   const { complete, updateList } = useShopList();
 
-  const [isOpen, setIsOpen] = useState(defaultOpened);
+  const [isOpen, setIsOpen] = useState(opened);
   const [isModal, setIsModal] = useState(false);
 
   const prevValue = useRef(isOpen);
@@ -53,18 +55,12 @@ export const ShopItemCollapse: FC<Props> = ({
       }, COLLAPSE_DEFAULT_DURATION);
     }
 
-    if (!isOpen && disableDefaultOpen) disableDefaultOpen();
-
     prevValue.current = isOpen;
 
     return () => {
       clearTimeouts();
     };
   }, [isOpen]);
-
-  useEffect(() => {
-    if (defaultOpened) setIsOpen(true);
-  }, [defaultOpened]);
 
   const onOk = () => {
     const isComplete = !list.find(({ isComplete }) => !isComplete);
@@ -75,6 +71,8 @@ export const ShopItemCollapse: FC<Props> = ({
       list.forEach((e) => (e.isComplete = true));
     }
 
+    openCategory(color, true);
+    setIsOpen(true);
     updateList();
   };
 
@@ -87,7 +85,10 @@ export const ShopItemCollapse: FC<Props> = ({
     <>
       <Collapse
         isOpen={isOpen}
-        onOpen={(is) => setIsOpen(is)}
+        onOpen={(is) => {
+          setIsOpen(is);
+          setIsOpened(is);
+        }}
         header={
           <View style={{ ...css.header, ...(!isBorder ? css.closed : {}) }}>
             <View style={{ ...css.headerElement, ...css.categoryName }}>
