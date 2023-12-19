@@ -1,4 +1,4 @@
-import React, { FC, useRef } from "react";
+import React, { FC, memo, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { CategoryType } from "../../providers/Categories/type";
@@ -11,6 +11,7 @@ interface Props {
   setCategories: (categories: CategoryType[]) => void;
   width: number;
 }
+
 export const List: FC<Props> = ({ categories, setCategories, width }) => {
   return (
     <View style={css.list}>
@@ -59,3 +60,4 @@ const css = StyleSheet.create({
     width: "100%",
   },
 });
+

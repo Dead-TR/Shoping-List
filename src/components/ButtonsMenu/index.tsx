@@ -1,5 +1,4 @@
 import React, { FC, Fragment } from "react";
-import { IconType } from "../Icon/type";
 import {
   StyleProp,
   StyleSheet,
@@ -7,6 +6,8 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+
+import { IconType } from "../Icon/type";
 import { Button } from "../Button";
 import { Icon } from "../Icon";
 
@@ -23,7 +24,7 @@ export const ButtonsMenu: FC<ButtonsMenuProps> = ({ buttons, style }) => {
     <View style={css.menu}>
       {buttons.map(({ icon, onPress }, i) => (
         <Fragment key={icon + i}>
-          <Button onPress={onPress}>
+          <Button style={css.button} onPress={onPress}>
             <Icon icon={icon} style={{ ...css.icon, ...(style as object) }} />
           </Button>
         </Fragment>
@@ -37,11 +38,14 @@ const css = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 40,
-    padding: 10,
-    marginBottom: 10,
+    gap: 0,
   },
   icon: {
     color: "#ffffff",
+    minWidth: 35,
+    minHeight: 35,
+  },
+  button: {
+    padding: 20,
   },
 });

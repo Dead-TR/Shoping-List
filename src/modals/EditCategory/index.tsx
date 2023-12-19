@@ -21,7 +21,7 @@ export const EditCategories: FC<ModalProps> = ({ onClose }) => {
   }, []);
 
   return (
-    <ModalLayout style={css.container}>
+    <ModalLayout style={{ ...css.container, opacity: width ? 1 : 0 }}>
       <View
         onLayout={({
           nativeEvent: {
@@ -59,8 +59,8 @@ export const EditCategories: FC<ModalProps> = ({ onClose }) => {
 
 const css = StyleSheet.create({
   container: {
-    paddingTop: 10,
-    paddingBottom: 15,
+    // paddingTop: 10,
+    // paddingBottom: 15,
   },
 
   header: {},
@@ -68,6 +68,8 @@ const css = StyleSheet.create({
     textAlign: "center",
     fontWeight: "600",
     color: "white",
-    fontSize: 15,
+    fontSize: 20,
+    paddingTop: 15,
+    paddingBottom: 5,
   },
 });

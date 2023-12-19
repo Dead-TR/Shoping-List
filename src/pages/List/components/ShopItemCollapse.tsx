@@ -108,10 +108,14 @@ export const ShopItemCollapse: FC<Props> = ({
             </View>
 
             <View style={css.headerElement}>
-              <Button style={css.headerButton} onPress={onOk}>
+              <Button
+                style={{ ...css.headerButton, ...css.options }}
+                onPress={onOk}>
                 <Icon icon="ok" style={css.headerIcon} />
               </Button>
-              <Button style={css.headerButton} onPress={() => setIsModal(true)}>
+              <Button
+                style={{ ...css.headerButton, ...css.options, paddingLeft: 0 }}
+                onPress={() => setIsModal(true)}>
                 <Icon icon="trash" style={css.headerIcon} />
               </Button>
             </View>
@@ -182,14 +186,17 @@ const css = StyleSheet.create({
     borderTopRightRadius: radius,
   },
   headerIcon: {
-    minWidth: 20,
-    minHeight: 20,
-    maxWidth: 20,
-    maxHeight: 20,
+    minWidth: 25,
+    minHeight: 25,
+    maxWidth: 25,
+    maxHeight: 25,
     color: "#000000",
   },
   headerButton: {
     padding: 5,
+  },
+  options: {
+    padding: 10,
   },
   closed: {
     borderBottomLeftRadius: radius,

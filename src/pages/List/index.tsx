@@ -140,6 +140,7 @@ const css = StyleSheet.create({
   },
   title: {
     textAlign: "center",
+    fontSize: 20,
   },
   loader: {
     position: "absolute",

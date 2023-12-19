@@ -183,10 +183,9 @@ const css = StyleSheet.create({
   input: {
     color: "#ffffff",
     textAlign: "center",
+    fontSize: 18,
   },
   header: {
     marginHorizontal: 10,
   },
 });
-
-

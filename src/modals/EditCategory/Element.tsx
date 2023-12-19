@@ -75,6 +75,7 @@ const css = StyleSheet.create({
   },
   input: {
     textAlign: "center",
+    fontSize: 18
   },
   move: {
     width: 20,
